@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
 
   List<ProductDetail> productList = [
     ProductDetail(
-        name: "Mobile Phone",
+        name: "Mobile Phgfgone",
         price: 150.154,
         imageUrl:
             "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
