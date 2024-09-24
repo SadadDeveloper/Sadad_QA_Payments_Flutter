@@ -291,11 +291,40 @@ class AppServices {
     return "";
   }
 
-  static Future<dynamic?> debitCardWebViewRequest({required String encodedString}) async {
+  static Future<dynamic?> debitCardWebViewRequest({required Map encodedString}) async {
     final url = Uri.parse(ApiEndPoint.debitCardURL);
-    String body = encodedString;
+    Map body = encodedString;
+
+    // Map<String, dynamic> body = {
+    //   "issandboxmode": '${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}',
+    //   "amount": widget.webViewDetailsModel.transactionAmount,
+    //   "isLanguage": '${lang}',
+    //   "PUN": '${widget.webViewDetailsModel.transactionId ?? ""}',
+    //   "SID": '${widget.webViewDetailsModel.sadadId}',
+    //   "merchant_code": '${widget.webViewDetailsModel.sadadId}'
+    // };
+    //var request = http.Request('POST', Uri.parse('https://sadadqa.com/debitcardSDK'));
+    // var bodyFinal = json.encode({
+    //   "issandboxmode": encodedString["issandboxmode"],
+    //   "amount": encodedString["amount"],
+    //   "isLanguage": encodedString["isLanguage"],
+    //   "PUN": encodedString["PUN"],
+    //   "SID": encodedString["SID"],
+    //   "merchant_code": encodedString["merchant_code"]
+    // });
+    Map<String, dynamic> temp = {
+      "issandboxmode": encodedString["issandboxmode"],
+      "amount": encodedString["amount"].toString(),
+      "isLanguage": encodedString["isLanguage"],
+      "PUN": encodedString["PUN"],
+      "SID": encodedString["SID"],
+      "merchant_code": encodedString["merchant_code"]
+    };
     //List<int> body = utf8.encode("encryptData=$encodedString");
-    var result = await http.post(url, body: body);
+    var result = await http.post(
+      url,
+      body: temp,
+    );
     if (result.statusCode == 200) {
       var response = jsonDecode(result.body);
       return response;

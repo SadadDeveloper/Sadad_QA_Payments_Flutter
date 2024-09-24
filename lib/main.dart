@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                           orderId: "fdsgcfmgjd43424342g",
                           productDetail: [{"test":"jhjkkk","test2":"dfdsf"}],
                           customerName: "demo",
-                          amount: total(),
+                          amount: 3,
                           email: "demo@gmail.com",
                           mobile: "98989898",
                           token: token,

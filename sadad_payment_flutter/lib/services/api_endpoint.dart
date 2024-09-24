@@ -157,11 +157,11 @@ class ApiEndPoint {
 // static const test_verifyOtp = "https://aks-mapi-sandbox.sadadqa.com/sdk-sandbox_api/usermetaauths/verify";
 
 
-  // ////////////////////////////////////////
-  // ////////////////////////////////////////
-  // //// Pre-prod Server API////////////////
-  // ////////////////////////////////////////
-  ////==================== Preprod Server URL ================================
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+  //// Pre-prod Server API////////////////
+  ////////////////////////////////////////
+  //==================== Preprod Server URL ================================
   static const Live_CreditCardSettings = "https://aks-mapi.sadadqa.com/sdk-api/settings?filter[where][or][0][key]=ENABLE_CREDIT_CARD&filter[where][or][1][key]=ENABLE_DEBIT_CARD&filter[where][or][2][key]=credit_card_bankpage_type&filter[where][or][3][key]=is_apple_pay_payment&filter[where][or][4][key]=is_google_pay_payment&filter[where][or][5][key]=is_american_express&filter[where][or][6][key]=is_cybersourse_visa&filter[where][or][7][key]=is_cybersourse_mastercard&filter[where][or][8][key]=sdk_min_amount";
   static const Live_CheckCountry = "https://aks-mapi.sadadqa.com/sdk-api/usermetapreferences/checkAllowedCountry";
   static const Live_usermeta = "https://aks-mapi.sadadqa.com/sdk-api/usermetapreferences?filter[include]=user";
@@ -250,11 +250,11 @@ class ApiEndPoint {
 
 
 
-  // // ////////////////////////////////////////
-  // // ////////////////////////////////////////
-  // // //// Production Server API////////////////
-  // // ////////////////////////////////////////
-  // ////==================== Production Server URL ================================
+  // ////////////////////////////////////////
+  // ////////////////////////////////////////
+  // //// Production Server API////////////////
+  // ////////////////////////////////////////
+  ////==================== Production Server URL ================================
   // static const Live_CreditCardSettings = "https://mapi.sadadqa.com/sdk-api/settings?filter[where][or][0][key]=ENABLE_CREDIT_CARD&filter[where][or][1][key]=ENABLE_DEBIT_CARD&filter[where][or][2][key]=credit_card_bankpage_type&filter[where][or][3][key]=is_apple_pay_payment&filter[where][or][4][key]=is_google_pay_payment&filter[where][or][5][key]=is_american_express&filter[where][or][6][key]=is_cybersourse_visa&filter[where][or][7][key]=is_cybersourse_mastercard&filter[where][or][8][key]=sdk_min_amount";
   // static const Live_CheckCountry = "https://mapi.sadadqa.com/sdk-api/usermetapreferences/checkAllowedCountry";
   // static const Live_usermeta = "https://mapi.sadadqa.com/sdk-api/usermetapreferences?filter[include]=user";

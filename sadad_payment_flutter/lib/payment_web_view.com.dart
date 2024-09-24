@@ -225,9 +225,18 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
       String tempEncoded = base64.encode(utf8.encode(temp)).trim();
       var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+      Map<String, dynamic> body = {
+          "issandboxmode": '${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}',
+          "amount": (widget.webViewDetailsModel.transactionAmount!).toInt(),
+          "isLanguage": '${lang}',
+          "PUN": '${widget.webViewDetailsModel.transactionId ?? ""}',
+          "SID": '${widget.webViewDetailsModel.sadadId}',
+          "merchant_code": '${widget.webViewDetailsModel.sadadId}'
+      };
+
       var encodedFinal =
-          "issandboxmode=${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}&amount=${tempEncoded}&isLanguage=${lang}&PUN=${widget.webViewDetailsModel.transactionId ?? ""}";
-      Map? htmlString = await AppServices.debitCardWebViewRequest(encodedString: encodedFinal);
+          "issandboxmode=${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}&amount=${tempEncoded}&isLanguage=${lang}&PUN=${widget.webViewDetailsModel.transactionId ?? ""}&SID=${widget.webViewDetailsModel.sadadId}&merchant_code=${widget.webViewDetailsModel.sadadId}";
+      Map? htmlString = await AppServices.debitCardWebViewRequest(encodedString: body);
       String? webViewString;
       if (htmlString == null && context.mounted) {
         AppDialog.commonWarningDialog(

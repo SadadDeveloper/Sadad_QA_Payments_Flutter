@@ -28,9 +28,7 @@ import 'package:sadad_payment_flutter/model/usermetapreference.dart';
 import 'package:sadad_payment_flutter/model/webViewDetailsModel.dart';
 import 'package:sadad_payment_flutter/payment_web_view.com.dart';
 import 'package:sadad_payment_flutter/services/api_endpoint.dart';
-
 import 'package:sadad_payment_flutter/services/appservices.dart';
-// import 'package:sms_autofill/sms_autofill.dart';
 
 Locale selectedLanguage = PlatformDispatcher.instance.locale;
 bool useMobileLayout = false;
@@ -552,17 +550,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     paymentConfiguration: PaymentConfiguration.fromJsonString('''{
    "provider":"google_pay",
    "data":{
-      "environment":"TEST",
+      "environment":"PRODUCTION",
       "apiVersion":2,
       "apiVersionMinor":0,
       "allowedPaymentMethods":[
          {
+             "merchantInfo": {
+                "merchantId": "BCR2DN6TR6Y7Z2CJ",
+                "merchantName": "Sadad Payment Solutions"
+             },
             "type":"CARD",
             "tokenizationSpecification":{
                "type":"PAYMENT_GATEWAY",
                "parameters":{
                   "gateway":"mpgs",
-                  "gatewayMerchantId":"testSPSQNB01"
+                  "gatewayMerchantId":"SPSQNB01"
                }
             },
             "parameters":{
@@ -1114,177 +1116,177 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 cvvForm.currentState!.validate()) {
               String cardType = getCardType(cardNumberController.text);
               String firstSixDigit = cardNumberController.text.replaceAll("-", "").substring(0, 6);
-              if (cardType == "Amex" && is_american_express == "0") {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("American Express card not allowed for your merchant.".translate()),
-                ));
-              } else {
-                AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-
-                String? ipAddress = await NetworkInfo().getWifiIPv6();
-                String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
-                String? cardNumberWithoutSpace = cardNumberController.text.replaceAll("-", "");
-                List tempExpiryDate = expiryController.text.split("/");
-                var expiryDate = tempExpiryDate.last.toString() + tempExpiryDate.first.toString();
-                var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
-
-                var response = await AppServices.CreditCardPayment(
-                    hash: checkSum,
-                    card_type: cardType,
-                    token: widget.token,
-                    cardsixdigit: firstSixDigit,
-                    mobileNumber: widget.mobile,
-                    orderId: widget.orderId,
-                    txnAmount: widget.amount,
-                    productDetail: widget.productDetail,
-                    is_american_express: is_american_express == "0" ? false : true,
-                    is_cybersourse_visa: int.parse(is_cybersourse_visa),
-                    credit_card_bankpage_type: credit_card_bankpage_type,
-                    is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
-                    ipAddress: ipAddress ?? "",
-                    merchantID: merchantID,
-                    expiryDate: expiryDate,
-                    lang: lang,
-                    mobileos: Platform.isIOS ? "1" : "2",
-                    isAmexAllowed: is_american_express == "0" ? false : true,
-                    cvv: cvvController.text,
-                    email: widget.email,
-                    cardnumber: cardNumberWithoutSpace,
-                    cardHolderName: cardHolderNameController.text,
-                    lastname: cardHolderNameController.text.split(" ").last,
-                    firstname: cardHolderNameController.text.split(" ").first,
-                    issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0",
-                    userMetaPreference: userMetaPreference!);
-
-                Navigator.pop(context);
-                if (response["msg"] != null) {
-                  WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-                      themeColor: widget.themeColor ?? primaryColor,
-                      packageMode: widget.packageMode ?? PackageMode.release,
-                      token: widget.token,
-                      isAmexEnableForAdmin: is_american_express == "0" ? false : true,
-                      isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
-                      isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
-                      merchantUserId: userMetaPreference?.userId,
-                      isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
-                      isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
-                      creditcardType: cardType,
-                      sadadId: "",
-                      cardnumber: cardNumberController.text,
-                      expiryDate: expiryController.text,
-                      cvv: cvvController.text,
-                      cardHolderName: cardHolderNameController.text,
-                      customerName: widget.customerName,
-                      transactionAmount: (widget.amount * 100),
-                      transactionId: "",
-                      contactNumber: widget.mobile,
-                      paymentMethod: "credit",
-                      email: widget.email,
-                      isWebContentAvailable: true,
-                      webContent: response["msg"]);
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-                    },
-                  ));
-                } else {
-                  AppDialog.commonWarningDialog(
-                      themeColor: widget.themeColor ?? AppColors.primaryColor,
-                      useMobileLayout: useMobileLayout,
-                      context: context,
-                      title: "Error".translate(),
-                      subTitle: response["message"],
-                      buttonOnTap: () {
-                        Navigator.pop(context);
-                      },
-                      buttonText: "Okay".translate());
-                }
-              }
               // if (cardType == "Amex" && is_american_express == "0") {
               //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               //     content: Text("American Express card not allowed for your merchant.".translate()),
               //   ));
-              // }
-              // else {
+              // } else {
               //   AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-              //   CheckedAllowedCountryModel? data =
-              //       await AppServices.checkAllowedCountry(cardsixdigit: firstSixDigit, token: widget.token);
               //
-              //   ///change on live
-              //   if (data?.isAllowed == true) {
-              //     // pass securedata parameter
-              //     var response = await AppServices.GenerateCreditCardTransectionID(
-              //         hash: checkSum,
-              //         card_type: cardType,
+              //   String? ipAddress = await NetworkInfo().getWifiIPv6();
+              //   String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
+              //   String? cardNumberWithoutSpace = cardNumberController.text.replaceAll("-", "");
+              //   List tempExpiryDate = expiryController.text.split("/");
+              //   var expiryDate = tempExpiryDate.last.toString() + tempExpiryDate.first.toString();
+              //   var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+              //
+              //   var response = await AppServices.CreditCardPayment(
+              //       hash: checkSum,
+              //       card_type: cardType,
+              //       token: widget.token,
+              //       cardsixdigit: firstSixDigit,
+              //       mobileNumber: widget.mobile,
+              //       orderId: widget.orderId,
+              //       txnAmount: widget.amount,
+              //       productDetail: widget.productDetail,
+              //       is_american_express: is_american_express == "0" ? false : true,
+              //       is_cybersourse_visa: int.parse(is_cybersourse_visa),
+              //       credit_card_bankpage_type: credit_card_bankpage_type,
+              //       is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
+              //       ipAddress: ipAddress ?? "",
+              //       merchantID: merchantID,
+              //       expiryDate: expiryDate,
+              //       lang: lang,
+              //       mobileos: Platform.isIOS ? "1" : "2",
+              //       isAmexAllowed: is_american_express == "0" ? false : true,
+              //       cvv: cvvController.text,
+              //       email: widget.email,
+              //       cardnumber: cardNumberWithoutSpace,
+              //       cardHolderName: cardHolderNameController.text,
+              //       lastname: cardHolderNameController.text.split(" ").last,
+              //       firstname: cardHolderNameController.text.split(" ").first,
+              //       issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0",
+              //       userMetaPreference: userMetaPreference!);
+              //
+              //   Navigator.pop(context);
+              //   if (response["msg"] != null) {
+              //     WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+              //         themeColor: widget.themeColor ?? primaryColor,
+              //         packageMode: widget.packageMode ?? PackageMode.release,
               //         token: widget.token,
-              //         cardsixdigit: firstSixDigit,
-              //         mobileNumber: widget.mobile,
-              //         orderId: widget.orderId,
-              //         txnAmount: widget.amount,
-              //         productDetail: widget.productDetail,
-              //         is_american_express: is_american_express == "0" ? false : true,
-              //         is_cybersourse_visa: int.parse(is_cybersourse_visa),
-              //         credit_card_bankpage_type: credit_card_bankpage_type,
-              //         is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
-              //         userMetaPreference: userMetaPreference!);
-              //
-              //     Navigator.pop(context);
-              //     if (response is String) {
-              //       AppDialog.commonWarningDialog(
-              //           themeColor: widget.themeColor ?? AppColors.primaryColor,
-              //           useMobileLayout: useMobileLayout,
-              //           context: context,
-              //           title: "Error".translate(),
-              //           subTitle: response,
-              //           buttonOnTap: () {
-              //             Navigator.pop(context);
-              //           },
-              //           buttonText: "Okay".translate());
-              //     } else if (response is TransactionIdDetailsModel) {
-              //       // String sadad_id = response.sadadId ?? "";
-              //       //String invoiceNumber = response.invoicenumber ?? "";
-              //       WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-              //           themeColor: widget.themeColor ?? primaryColor,
-              //           packageMode: widget.packageMode ?? PackageMode.release,
-              //           token: widget.token,
-              //           isAmexEnableForAdmin: is_american_express == "0" ? false : true,
-              //           isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
-              //           isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
-              //           merchantUserId: userMetaPreference?.userId,
-              //           isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
-              //           isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
-              //           creditcardType: cardType,
-              //           sadadId: response.sadadId ?? "",
-              //           cardnumber: cardNumberController.text,
-              //           expiryDate: expiryController.text,
-              //           cvv: cvvController.text,
-              //           cardHolderName: cardHolderNameController.text,
-              //           customerName: widget.customerName,
-              //           transactionAmount: (widget.amount * 100),
-              //           transactionId: response.invoicenumber.toString(),
-              //           contactNumber: widget.mobile,
-              //           paymentMethod: "credit",
-              //           email: widget.email);
-              //       Navigator.push(context, MaterialPageRoute(
-              //         builder: (context) {
-              //           return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-              //         },
-              //       ));
-              //     }
+              //         isAmexEnableForAdmin: is_american_express == "0" ? false : true,
+              //         isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
+              //         isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
+              //         merchantUserId: userMetaPreference?.userId,
+              //         isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
+              //         isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
+              //         creditcardType: cardType,
+              //         sadadId: "",
+              //         cardnumber: cardNumberController.text,
+              //         expiryDate: expiryController.text,
+              //         cvv: cvvController.text,
+              //         cardHolderName: cardHolderNameController.text,
+              //         customerName: widget.customerName,
+              //         transactionAmount: (widget.amount * 100),
+              //         transactionId: "",
+              //         contactNumber: widget.mobile,
+              //         paymentMethod: "credit",
+              //         email: widget.email,
+              //         isWebContentAvailable: true,
+              //         webContent: response["msg"]);
+              //     Navigator.push(context, MaterialPageRoute(
+              //       builder: (context) {
+              //         return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
+              //       },
+              //     ));
               //   } else {
-              //     Navigator.pop(context);
               //     AppDialog.commonWarningDialog(
               //         themeColor: widget.themeColor ?? AppColors.primaryColor,
               //         useMobileLayout: useMobileLayout,
               //         context: context,
-              //         title: "Not Allowed".translate(),
-              //         subTitle: "Transaction is not allowed from your country.".translate(),
+              //         title: "Error".translate(),
+              //         subTitle: response["message"],
               //         buttonOnTap: () {
               //           Navigator.pop(context);
               //         },
               //         buttonText: "Okay".translate());
               //   }
               // }
+              if (cardType == "Amex" && is_american_express == "0") {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("American Express card not allowed for your merchant.".translate()),
+                ));
+              }
+              else {
+                AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
+                CheckedAllowedCountryModel? data =
+                    await AppServices.checkAllowedCountry(cardsixdigit: firstSixDigit, token: widget.token);
+
+                ///change on live
+                if (data?.isAllowed == true) {
+                  // pass securedata parameter
+                  var response = await AppServices.GenerateCreditCardTransectionID(
+                      hash: checkSum,
+                      card_type: cardType,
+                      token: widget.token,
+                      cardsixdigit: firstSixDigit,
+                      mobileNumber: widget.mobile,
+                      orderId: widget.orderId,
+                      txnAmount: widget.amount,
+                      productDetail: widget.productDetail,
+                      is_american_express: is_american_express == "0" ? false : true,
+                      is_cybersourse_visa: int.parse(is_cybersourse_visa),
+                      credit_card_bankpage_type: credit_card_bankpage_type,
+                      is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
+                      userMetaPreference: userMetaPreference!);
+
+                  Navigator.pop(context);
+                  if (response is String) {
+                    AppDialog.commonWarningDialog(
+                        themeColor: widget.themeColor ?? AppColors.primaryColor,
+                        useMobileLayout: useMobileLayout,
+                        context: context,
+                        title: "Error".translate(),
+                        subTitle: response,
+                        buttonOnTap: () {
+                          Navigator.pop(context);
+                        },
+                        buttonText: "Okay".translate());
+                  } else if (response is TransactionIdDetailsModel) {
+                    // String sadad_id = response.sadadId ?? "";
+                    //String invoiceNumber = response.invoicenumber ?? "";
+                    WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+                        themeColor: widget.themeColor ?? primaryColor,
+                        packageMode: widget.packageMode ?? PackageMode.release,
+                        token: widget.token,
+                        isAmexEnableForAdmin: is_american_express == "0" ? false : true,
+                        isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
+                        isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
+                        merchantUserId: userMetaPreference?.userId,
+                        isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
+                        isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
+                        creditcardType: cardType,
+                        sadadId: response.sadadId ?? "",
+                        cardnumber: cardNumberController.text,
+                        expiryDate: expiryController.text,
+                        cvv: cvvController.text,
+                        cardHolderName: cardHolderNameController.text,
+                        customerName: widget.customerName,
+                        transactionAmount: (widget.amount * 100),
+                        transactionId: response.invoicenumber.toString(),
+                        contactNumber: widget.mobile,
+                        paymentMethod: "credit",
+                        email: widget.email);
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
+                      },
+                    ));
+                  }
+                } else {
+                  Navigator.pop(context);
+                  AppDialog.commonWarningDialog(
+                      themeColor: widget.themeColor ?? AppColors.primaryColor,
+                      useMobileLayout: useMobileLayout,
+                      context: context,
+                      title: "Not Allowed".translate(),
+                      subTitle: "Transaction is not allowed from your country.".translate(),
+                      buttonOnTap: () {
+                        Navigator.pop(context);
+                      },
+                      buttonText: "Okay".translate());
+                }
+              }
             }
             setState(() {});
           },

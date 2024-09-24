@@ -214,8 +214,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       String tempEncoded = base64.encode(utf8.encode(temp)).trim();
       var encodedFinal =
           "amount=${tempEncoded}&PUN=${widget.webViewDetailsModel.transactionId ?? ""}&type=${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "sandbox" : "production"}";
-      String? htmlString = await AppServices.debitCardWebViewRequest(encodedString: encodedFinal);
-      webController?.loadHtmlString(htmlString as String);
+      //String? htmlString = await AppServices.debitCardWebViewRequest(encodedString: encodedFinal);
+      //webController?.loadHtmlString(htmlString as String);
     } else if (widget.webViewDetailsModel.paymentMethod == "sadadPay") {
       // String? htmlString = await AppServices.sadadPayWebViewRequest(
       //     token: widget.webViewDetailsModel.token!,
