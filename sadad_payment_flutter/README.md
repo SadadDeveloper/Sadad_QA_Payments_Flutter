@@ -147,7 +147,7 @@ PaymentScreen(
 ```
 Output 1:
 
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 52 12](https://github.com/HardikVyasSelf/Sadad_SDK_Temp/assets/80443136/669a728f-21c6-4eda-8619-044d02b708a6)
+![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 52 12](https://dev.azure.com/sadad-ecommerce/_git/FlutterPaymentSDK?path=/assets/SDKScreenShot.png&version=GBmain)
 
 Example 2 :
 
@@ -171,5 +171,5 @@ Example 2 :
 ```
 Output 2:
 
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 59 41](https://github.com/HardikVyasSelf/Sadad_SDK_Temp/assets/80443136/7ae37911-41af-4a6e-b453-7e901da927ba)
+![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 59 41](https://dev.azure.com/sadad-ecommerce/_git/FlutterPaymentSDK?path=/assets/SDKScreenShot.png&version=GBmain)
 
