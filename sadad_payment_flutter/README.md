@@ -146,6 +146,9 @@ PaymentScreen(
                           themeColor: Colors.green)
 ```
 Output 1:
+![SDKScreenShot.png](./assets/SDKScreenShot.png)
+
+![SDKScreenShot.png](./Resources/Architecture&#32;view&#32;for&#32;AllProjects.png)
 
 ![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 52 12](https://dev.azure.com/sadad-ecommerce/_git/FlutterPaymentSDK?path=/assets/SDKScreenShot.png&version=GBmain)
 
