@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'dart:io';
 
 import 'package:cryptlib_2_0/cryptlib_2_0.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +43,8 @@ class PaymentScreen extends StatefulWidget {
   String mobile;
   String email;
   String customerName;
+  String googleMerchantID;
+  String googleMerchantName;
   double amount;
   Image image;
   bool isWalletEnabled;
@@ -67,6 +70,8 @@ class PaymentScreen extends StatefulWidget {
       required this.packageMode,
       required this.image,
       required this.orderId,
+        required this.googleMerchantID,
+        required this.googleMerchantName,
       this.paymentTypes = const [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay]});
 
   @override
@@ -106,7 +111,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final cvvForm = GlobalKey<FormState>();
   FocusNode creditCardHolderFocus = FocusNode();
   String checkSum = "";
-
+  String googleMerchantid = "";
+  String googleMerchantName = "";
   RegExp emailCheckOne = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-.]+\.[a-zA-Z]+");
 
   bool checkEmailLastPartContainNumber(String email) {
@@ -123,6 +129,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
+    googleMerchantid = widget.googleMerchantID;
+    googleMerchantName = widget.googleMerchantName;
     if (widget.paymentTypes.isEmpty && !widget.isWalletEnabled) {
       widget.paymentTypes = [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay];
       selectedPaymentMethod = widget.paymentTypes.first;
@@ -483,56 +491,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           Center(child: Image.asset(AssetPath.applePay, package: 'sadad_payment_flutter', height: 22)),
                     ),
                   )
-                : /*InkWell(
-                          onTap: () {
-                            if (userMetaPreference?.user?.sadadId == "" || userMetaPreference?.userId == "") {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      child: Column(
-                                        children: [
-                                          Text("Merchant has no permission to use SDK. Please contact to administrator.".translate()),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("Okay".translate()))
-                                        ],
-                                      ),
-                                    );
-                                  });
-                            } else {
-                              WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-                                merchantSadadId: userMetaPreference?.user?.sadadId,
-                                checksum: checkSum,
-                                merchantUserId: userMetaPreference?.userId,
-                                cardHolderName: "cardholdername",
-                                email: widget.email,
-                                paymentMethod: "googlepay",
-                                contactNumber: widget.mobile,
-                                transactionAmount: widget.amount,
-                                productDetail: widget.productDetail,
-                                transactionId: "",
-                                token: widget.token,
-                              );
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-                                },
-                              )).then((value) {
-                                Navigator.pop(context, value);
-                              });
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.white, borderRadius: BorderRadius.circular(5), boxShadow: const [BoxShadow(color: AppColors.black12, blurRadius: 5, blurStyle: BlurStyle.outer)]),
-                            height: 55,
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Center(child: Image.asset(AssetPath.gPay, package: 'sadad_payment_flutter', height: 22)),
-                          ),
-                        )*/
+                :
                 // Google pay Dev testSPSQNB01
                 // Google pay Live SPSQNB01
 
@@ -544,6 +503,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 //"environment":"PRODUCTION",
 
                 ///////////////
+                widget.packageMode == PackageMode.release ?
                 GooglePayButton(
                     height: useMobileLayout ? 50 : 65,
                     width: MediaQuery.of(context).size.width - (useMobileLayout ? 80 : 124),
@@ -553,12 +513,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
       "environment":"PRODUCTION",
       "apiVersion":2,
       "apiVersionMinor":0,
+      "merchantInfo": {
+         "merchantId": "$googleMerchantid",
+         "merchantName": "$googleMerchantName"
+      },
       "allowedPaymentMethods":[
          {
-             "merchantInfo": {
-                "merchantId": "BCR2DN6TR6Y7Z2CJ",
-                "merchantName": "Sadad Payment Solutions"
-             },
             "type":"CARD",
             "tokenizationSpecification":{
                "type":"PAYMENT_GATEWAY",
@@ -584,7 +544,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             }
          }
       ],
-
       "transactionInfo":{
          "countryCode":"QA",
          "currencyCode":"QAR"
@@ -624,36 +583,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
                       var postString =
                           "issandboxmode=${(widget.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=$lang&website_ref_no_credit=${widget.orderId}&isFlutter=1&vpc_Version=1&mobileOS=${Platform.isIOS ? "1" : "2"}&vpc_Command=pay&paymentToken=$tokenData&walletProvider=GOOGLE_PAY&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${""}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.token}";
-                      // var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-                      // String encodedString = base64.encode(utf8.encode(temp)).trim();
-                      // var postString =
-                      //     "is_Flutter=1&vpc_Version=1&deviceIp=$ipAddress&transactionmodeId=5&MID=${userMetaPreference?.user?.sadadId.toString() ?? userMetaPreference?.userId}&vpc_Command=pay&vpc_Merchant=${userMetaPreference?.user?.sadadId.toString()}&vpc_AccessCode=F4996AF0&vpc_MerchTxnRef=6AQ89F3&vpc_OrderInfo=Test Order&vpc_Amount=${widget.amount}&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS 2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=SD417921222270&transactionEntityId=9&email=demo@gmail.com&mobilePhone=9749898989898&city=&country=&walletProvider=GOOGLE_PAY&paymentToken=$tokenData&carduser_id=${userMetaPreference?.userId}";
+
                       var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
                       String encodedString = base64.encode(utf8.encode(temp)).trim();
 
                       var htmlString2 = await AppServices.googlePayment(encrypt_string: encodedString);
-                      // Map? htmlString = await AppServices.googlePayCompletion(
-                      //   encodedString: encodedString,
-                      //   googlePayURL: ApiEndPoint.googlePayWebRequest,
-                      // );
                       Navigator.pop(context);
-                      // if (htmlString == null) {
-                      //   AppDialog.commonWarningDialog(
-                      //       themeColor: widget.themeColor ?? AppColors.primaryColor,
-                      //       useMobileLayout: useMobileLayout,
-                      //       context: context,
-                      //       title: "Issue".translate(),
-                      //       subTitle:
-                      //           "Sorry, We are not able to process the transaction. Please try again.".translate(),
-                      //       buttonOnTap: () {
-                      //         Navigator.pop(context);
-                      //         Navigator.pop(context);
-                      //       },
-                      //       buttonText: "Okay".translate());
-                      // } else {
-                      //   if (htmlString["status"].toString() == "success") {
-                      //webViewString = htmlString["msg"];
-                      //webController.loadHtmlString(webViewString as String);
+
     if (htmlString2.toString().contains("<div")) {
                         //if(true) {
                         WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
@@ -689,26 +625,170 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               },
                             buttonText: "Okay".translate());
                       }
-                      // } else {
-                      //   AppDialog.commonWarningDialog(
-                      //       themeColor: widget.themeColor ?? AppColors.primaryColor,
-                      //       useMobileLayout: useMobileLayout,
-                      //       context: context,
-                      //       title: "Issue".translate(),
-                      //       subTitle: htmlString["msg"].toString(),
-                      //       buttonOnTap: () {
-                      //         Navigator.pop(context);
-                      //         Navigator.pop(context);
-                      //       },
-                      //       buttonText: "Okay".translate());
-                      // }
-                      //}
-                      //print("html String $htmlString");
                     },
                     loadingIndicator: const Center(
                       child: CircularProgressIndicator(),
                     ),
+                  ) : GooglePayButton(
+                  height: useMobileLayout ? 50 : 65,
+                  width: MediaQuery.of(context).size.width - (useMobileLayout ? 80 : 124),
+                  paymentConfiguration: PaymentConfiguration.fromJsonString('''{
+   "provider":"google_pay",
+   "data":{
+      "environment":"TEST",
+      "apiVersion":2,
+      "apiVersionMinor":0,
+      "allowedPaymentMethods":[
+         {
+            "type":"CARD",
+            "tokenizationSpecification":{
+               "type":"PAYMENT_GATEWAY",
+               "parameters":{
+                  "gateway":"mpgs",
+                  "gatewayMerchantId":"testSPSQNB01"
+               }
+            },
+            "parameters":{
+               "allowedCardNetworks":[
+                  "VISA",
+                  "MASTERCARD"
+               ],
+               "allowedAuthMethods":[
+                  "PAN_ONLY",
+                  "CRYPTOGRAM_3DS"
+               ],
+               "billingAddressRequired":false,
+               "billingAddressParameters":{
+                  "format":"FULL",
+                  "phoneNumberRequired":true
+               }
+            }
+         }
+      ],
+      "transactionInfo":{
+         "countryCode":"QA",
+         "currencyCode":"QAR"
+      }
+   }
+}'''),
+                  paymentItems: [
+                    PaymentItem(
+                      label: "Total".translate(),
+                      amount: widget.amount.toString() ?? "",
+                      status: PaymentItemStatus.final_price,
+                      type: PaymentItemType.total,
+                    )
+                  ],
+                  type: GooglePayButtonType.plain,
+                  margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 20 : 62),
+                  onPaymentResult: (result) async {
+                    AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
+                    var tokenData = result["paymentMethodData"]["tokenizationData"]["token"];
+                    String? ipAddress = await NetworkInfo().getWifiIPv6();
+                    double amount = widget.amount ?? 0;
+                    int finalamount = (amount * 100).toInt();
+                    String cardHolderName = "" ?? "";
+                    String firstName = "";
+                    String lastName = "";
+                    String country = "";
+                    String emailId = widget.email ?? "";
+                    String cellNo = widget.mobile ?? "";
+                    //String checkSumLocal = checkSum;
+                    // As per basecamp requirement remove checksum from Rishabh
+                    String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
+                    String merchantSadadID = userMetaPreference?.user?.sadadId ?? ""; //"9246722";
+                    var strProductDetails = jsonEncode(widget.productDetail);
+                    strProductDetails = strProductDetails.replaceAll("(", "[");
+                    strProductDetails = strProductDetails.replaceAll(")", "]");
+                    strProductDetails = strProductDetails.replaceAll("\n", "");
+                    var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+                    var postString =
+                        "issandboxmode=${(widget.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=$lang&website_ref_no_credit=${widget.orderId}&isFlutter=1&vpc_Version=1&mobileOS=${Platform.isIOS ? "1" : "2"}&vpc_Command=pay&paymentToken=$tokenData&walletProvider=GOOGLE_PAY&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${""}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.token}";
+                    // var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+                    // String encodedString = base64.encode(utf8.encode(temp)).trim();
+                    // var postString =
+                    //     "is_Flutter=1&vpc_Version=1&deviceIp=$ipAddress&transactionmodeId=5&MID=${userMetaPreference?.user?.sadadId.toString() ?? userMetaPreference?.userId}&vpc_Command=pay&vpc_Merchant=${userMetaPreference?.user?.sadadId.toString()}&vpc_AccessCode=F4996AF0&vpc_MerchTxnRef=6AQ89F3&vpc_OrderInfo=Test Order&vpc_Amount=${widget.amount}&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS 2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=SD417921222270&transactionEntityId=9&email=demo@gmail.com&mobilePhone=9749898989898&city=&country=&walletProvider=GOOGLE_PAY&paymentToken=$tokenData&carduser_id=${userMetaPreference?.userId}";
+                    var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+                    String encodedString = base64.encode(utf8.encode(temp)).trim();
+
+                    var htmlString2 = await AppServices.googlePayment(encrypt_string: encodedString);
+                    // Map? htmlString = await AppServices.googlePayCompletion(
+                    //   encodedString: encodedString,
+                    //   googlePayURL: ApiEndPoint.googlePayWebRequest,
+                    // );
+                    Navigator.pop(context);
+                    // if (htmlString == null) {
+                    //   AppDialog.commonWarningDialog(
+                    //       themeColor: widget.themeColor ?? AppColors.primaryColor,
+                    //       useMobileLayout: useMobileLayout,
+                    //       context: context,
+                    //       title: "Issue".translate(),
+                    //       subTitle:
+                    //           "Sorry, We are not able to process the transaction. Please try again.".translate(),
+                    //       buttonOnTap: () {
+                    //         Navigator.pop(context);
+                    //         Navigator.pop(context);
+                    //       },
+                    //       buttonText: "Okay".translate());
+                    // } else {
+                    //   if (htmlString["status"].toString() == "success") {
+                    //webViewString = htmlString["msg"];
+                    //webController.loadHtmlString(webViewString as String);
+                    if (htmlString2.toString().contains("<div")) {
+                      //if(true) {
+                      WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+                        themeColor: widget.themeColor ?? primaryColor,
+                        merchantSadadId: userMetaPreference?.user?.sadadId,
+                        checksum: checkSum,
+                        merchantUserId: userMetaPreference?.userId,
+                        cardHolderName: "cardholdername",
+                        email: widget.email,
+                        paymentMethod: "googlePay",
+                        contactNumber: widget.mobile,
+                        transactionAmount: widget.amount,
+                        productDetail: widget.productDetail,
+                        transactionId: "",
+                        token: widget.token,
+                        htmlString:htmlString2,//htmlString?["msg"],
+                      );
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
+                        },
+                      ));
+                    } else {
+                      AppDialog.commonWarningDialog(
+                          themeColor: widget.themeColor ?? AppColors.primaryColor,
+                          useMobileLayout: useMobileLayout,
+                          context: context,
+                          title: "Issue".translate(),
+                          subTitle:
+                          "Sorry, We are not able to process the transaction. Please try again.".translate(),
+                          buttonOnTap: () {
+                            Navigator.pop(context);
+                          },
+                          buttonText: "Okay".translate());
+                    }
+                    // } else {
+                    //   AppDialog.commonWarningDialog(
+                    //       themeColor: widget.themeColor ?? AppColors.primaryColor,
+                    //       useMobileLayout: useMobileLayout,
+                    //       context: context,
+                    //       title: "Issue".translate(),
+                    //       subTitle: htmlString["msg"].toString(),
+                    //       buttonOnTap: () {
+                    //         Navigator.pop(context);
+                    //         Navigator.pop(context);
+                    //       },
+                    //       buttonText: "Okay".translate());
+                    // }
+                    //}
+                    //print("html String $htmlString");
+                  },
+                  loadingIndicator: const Center(
+                    child: CircularProgressIndicator(),
                   ),
+                ),
           )
       ]),
     );
@@ -1116,135 +1196,67 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 cvvForm.currentState!.validate()) {
               String cardType = getCardType(cardNumberController.text);
               String firstSixDigit = cardNumberController.text.replaceAll("-", "").substring(0, 6);
-              // if (cardType == "Amex" && is_american_express == "0") {
-              //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              //     content: Text("American Express card not allowed for your merchant.".translate()),
-              //   ));
-              // } else {
-              //   AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-              //
-              //   String? ipAddress = await NetworkInfo().getWifiIPv6();
-              //   String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
-              //   String? cardNumberWithoutSpace = cardNumberController.text.replaceAll("-", "");
-              //   List tempExpiryDate = expiryController.text.split("/");
-              //   var expiryDate = tempExpiryDate.last.toString() + tempExpiryDate.first.toString();
-              //   var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
-              //
-              //   var response = await AppServices.CreditCardPayment(
-              //       hash: checkSum,
-              //       card_type: cardType,
-              //       token: widget.token,
-              //       cardsixdigit: firstSixDigit,
-              //       mobileNumber: widget.mobile,
-              //       orderId: widget.orderId,
-              //       txnAmount: widget.amount,
-              //       productDetail: widget.productDetail,
-              //       is_american_express: is_american_express == "0" ? false : true,
-              //       is_cybersourse_visa: int.parse(is_cybersourse_visa),
-              //       credit_card_bankpage_type: credit_card_bankpage_type,
-              //       is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
-              //       ipAddress: ipAddress ?? "",
-              //       merchantID: merchantID,
-              //       expiryDate: expiryDate,
-              //       lang: lang,
-              //       mobileos: Platform.isIOS ? "1" : "2",
-              //       isAmexAllowed: is_american_express == "0" ? false : true,
-              //       cvv: cvvController.text,
-              //       email: widget.email,
-              //       cardnumber: cardNumberWithoutSpace,
-              //       cardHolderName: cardHolderNameController.text,
-              //       lastname: cardHolderNameController.text.split(" ").last,
-              //       firstname: cardHolderNameController.text.split(" ").first,
-              //       issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0",
-              //       userMetaPreference: userMetaPreference!);
-              //
-              //   Navigator.pop(context);
-              //   if (response["msg"] != null) {
-              //     WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-              //         themeColor: widget.themeColor ?? primaryColor,
-              //         packageMode: widget.packageMode ?? PackageMode.release,
-              //         token: widget.token,
-              //         isAmexEnableForAdmin: is_american_express == "0" ? false : true,
-              //         isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
-              //         isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
-              //         merchantUserId: userMetaPreference?.userId,
-              //         isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
-              //         isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
-              //         creditcardType: cardType,
-              //         sadadId: "",
-              //         cardnumber: cardNumberController.text,
-              //         expiryDate: expiryController.text,
-              //         cvv: cvvController.text,
-              //         cardHolderName: cardHolderNameController.text,
-              //         customerName: widget.customerName,
-              //         transactionAmount: (widget.amount * 100),
-              //         transactionId: "",
-              //         contactNumber: widget.mobile,
-              //         paymentMethod: "credit",
-              //         email: widget.email,
-              //         isWebContentAvailable: true,
-              //         webContent: response["msg"]);
-              //     Navigator.push(context, MaterialPageRoute(
-              //       builder: (context) {
-              //         return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-              //       },
-              //     ));
-              //   } else {
-              //     AppDialog.commonWarningDialog(
-              //         themeColor: widget.themeColor ?? AppColors.primaryColor,
-              //         useMobileLayout: useMobileLayout,
-              //         context: context,
-              //         title: "Error".translate(),
-              //         subTitle: response["message"],
-              //         buttonOnTap: () {
-              //           Navigator.pop(context);
-              //         },
-              //         buttonText: "Okay".translate());
-              //   }
-              // }
               if (cardType == "Amex" && is_american_express == "0") {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("American Express card not allowed for your merchant.".translate()),
                 ));
-              }
-              else {
+              } else {
                 AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-                CheckedAllowedCountryModel? data =
-                    await AppServices.checkAllowedCountry(cardsixdigit: firstSixDigit, token: widget.token);
 
-                ///change on live
-                if (data?.isAllowed == true) {
-                  // pass securedata parameter
-                  var response = await AppServices.GenerateCreditCardTransectionID(
-                      hash: checkSum,
-                      card_type: cardType,
-                      token: widget.token,
-                      cardsixdigit: firstSixDigit,
-                      mobileNumber: widget.mobile,
-                      orderId: widget.orderId,
-                      txnAmount: widget.amount,
-                      productDetail: widget.productDetail,
-                      is_american_express: is_american_express == "0" ? false : true,
-                      is_cybersourse_visa: int.parse(is_cybersourse_visa),
-                      credit_card_bankpage_type: credit_card_bankpage_type,
-                      is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
-                      userMetaPreference: userMetaPreference!);
+                String? ipAddress = await NetworkInfo().getWifiIPv6();
+                String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
+                String? cardNumberWithoutSpace = cardNumberController.text.replaceAll("-", "");
+                List tempExpiryDate = expiryController.text.split("/");
+                var expiryDate = tempExpiryDate.last.toString() + tempExpiryDate.first.toString();
+                var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+                userMetaPreference?.allowCountryHistory = "";
+                var response = await AppServices.CreditCardPayment(
+                    hash: checkSum,
+                    card_type: cardType,
+                    token: widget.token,
+                    cardsixdigit: firstSixDigit,
+                    mobileNumber: widget.mobile,
+                    orderId: widget.orderId,
+                    txnAmount: widget.amount,
+                    productDetail: widget.productDetail,
+                    is_american_express: is_american_express == "0" ? false : true,
+                    is_cybersourse_visa: int.parse(is_cybersourse_visa),
+                    credit_card_bankpage_type: credit_card_bankpage_type,
+                    is_cybersourse_mastercard: int.parse(is_cybersourse_mastercard),
+                    ipAddress: ipAddress ?? "",
+                    merchantID: merchantID,
+                    expiryDate: expiryDate,
+                    lang: lang,
+                    mobileos: Platform.isIOS ? "1" : "2",
+                    isAmexAllowed: is_american_express == "0" ? false : true,
+                    cvv: cvvController.text,
+                    email: widget.email,
+                    cardnumber: cardNumberWithoutSpace,
+                    cardHolderName: cardHolderNameController.text,
+                    lastname: cardHolderNameController.text.split(" ").last,
+                    firstname: cardHolderNameController.text.split(" ").first,
+                    issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0",
+                    userMetaPreference: userMetaPreference!);
 
-                  Navigator.pop(context);
-                  if (response is String) {
-                    AppDialog.commonWarningDialog(
-                        themeColor: widget.themeColor ?? AppColors.primaryColor,
-                        useMobileLayout: useMobileLayout,
-                        context: context,
-                        title: "Error".translate(),
-                        subTitle: response,
-                        buttonOnTap: () {
-                          Navigator.pop(context);
-                        },
-                        buttonText: "Okay".translate());
-                  } else if (response is TransactionIdDetailsModel) {
-                    // String sadad_id = response.sadadId ?? "";
-                    //String invoiceNumber = response.invoicenumber ?? "";
+                Navigator.pop(context);
+                if (response["isDebitCard"] == true) {
+                  AppDialog.commonWarningDialog(
+                      themeColor: widget.themeColor ?? AppColors.primaryColor,
+                      useMobileLayout: useMobileLayout,
+                      context: context,
+                      title: "Error".translate(),
+                      subTitle: response["msg"],
+                      buttonOnTap: () {
+                        Navigator.pop(context);
+                        setState(() {
+                        });
+                        selectedPaymentMethod = PaymentType.debitCard;
+                        OnTapDebitCard();
+
+                      },
+                      buttonText: "Okay".translate());
+                } else {
+                  if (response["msg"] != null) {
                     WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
                         themeColor: widget.themeColor ?? primaryColor,
                         packageMode: widget.packageMode ?? PackageMode.release,
@@ -1256,35 +1268,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
                         isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
                         creditcardType: cardType,
-                        sadadId: response.sadadId ?? "",
+                        sadadId: "",
                         cardnumber: cardNumberController.text,
                         expiryDate: expiryController.text,
                         cvv: cvvController.text,
                         cardHolderName: cardHolderNameController.text,
                         customerName: widget.customerName,
                         transactionAmount: (widget.amount * 100),
-                        transactionId: response.invoicenumber.toString(),
+                        transactionId: "",
                         contactNumber: widget.mobile,
                         paymentMethod: "credit",
-                        email: widget.email);
+                        email: widget.email,
+                        isWebContentAvailable: true,
+                        webContent: response["msg"]);
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
                         return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
                       },
                     ));
+                  } else {
+                    AppDialog.commonWarningDialog(
+                        themeColor: widget.themeColor ?? AppColors.primaryColor,
+                        useMobileLayout: useMobileLayout,
+                        context: context,
+                        title: "Error".translate(),
+                        subTitle: response["message"],
+                        buttonOnTap: () {
+                          Navigator.pop(context);
+                        },
+                        buttonText: "Okay".translate());
                   }
-                } else {
-                  Navigator.pop(context);
-                  AppDialog.commonWarningDialog(
-                      themeColor: widget.themeColor ?? AppColors.primaryColor,
-                      useMobileLayout: useMobileLayout,
-                      context: context,
-                      title: "Not Allowed".translate(),
-                      subTitle: "Transaction is not allowed from your country.".translate(),
-                      buttonOnTap: () {
-                        Navigator.pop(context);
-                      },
-                      buttonText: "Okay".translate());
                 }
               }
             }
@@ -1578,50 +1591,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           type: "Debit",
           title: " ${roundOffToXDecimal(widget.amount, numberOfDecimal: 2)}",
           onTap: () async {
-            var response = await AppServices.GenerateDebitCardTransactionID(
-                hash: checkSum,
-                token: widget.token,
-                mobileNumber: widget.mobile,
-                txnAmount: widget.amount,
-                productDetail: widget.productDetail,
-                orderId: widget.orderId,
-                userMetaPreference: userMetaPreference!);
-            if (response is int) {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: Text(response.toString()),
-                    );
-                  });
-            } else if (response is TransactionIdDetailsModel) {
-              WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-                  themeColor: widget.themeColor ?? primaryColor,
-                  packageMode: widget.packageMode,
-                  token: widget.token,
-                  isAmexEnableForAdmin: is_american_express == "0" ? false : true,
-                  isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
-                  isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
-                  isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
-                  isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
-                  creditcardType: "",
-                  sadadId: response.sadadId ?? "",
-                  cardnumber: cardNumberController.text,
-                  expiryDate: expiryController.text,
-                  cvv: cvvController.text,
-                  cardHolderName: cardHolderNameController.text,
-                  customerName: widget.customerName,
-                  transactionAmount: (widget.amount * 100),
-                  transactionId: response.invoicenumber.toString(),
-                  contactNumber: widget.mobile,
-                  paymentMethod: "debit",
-                  email: widget.email);
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-                },
-              ));
-            }
+            OnTapDebitCard();
           },
         ),
         const SizedBox(height: 15),
@@ -1629,7 +1599,69 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ]),
     );
   }
+  OnTapDebitCard() async {
+    AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
 
+    var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+
+    var mobileos = Platform.isIOS ? "1" : "2";
+
+    Map<String, dynamic> body = {
+      "token": '${widget.token}',
+      "mobileNumber": '${widget.mobile}',
+      "orderId": '${widget.orderId}',
+      "issandboxmode": '${(widget.packageMode == PackageMode.debug) ? "1" : "0"}',
+      "txnAmount": (widget.amount * 100).toInt(),
+      "productDetail" : widget.productDetail,
+      "lang": '${lang}',
+      "mobileos" : '${mobileos}',
+    };
+    Map? response = await AppServices.debitCardPayment(encodedString: body);
+    Navigator.pop(context);
+
+    if (response?["msg"] != null) {
+      WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+          themeColor: widget.themeColor ?? primaryColor,
+          packageMode: widget.packageMode ?? PackageMode.release,
+          token: widget.token,
+          isAmexEnableForAdmin: is_american_express == "0" ? false : true,
+          isMasterEnableForCyber: userMetaPreference?.isallowedtocybersourcemastercard ?? false ? 0 : 1,
+          isVisaEnableForCyber: userMetaPreference?.isallowedtocybersourcevisa ?? false ? 0 : 1,
+          merchantUserId: userMetaPreference?.userId,
+          isMasterEnableForCyberAdmin: int.parse(is_cybersourse_mastercard),
+          isVisaEnableForCyberAdmin: int.parse(is_cybersourse_visa),
+          creditcardType: cardType,
+          sadadId: "",
+          cardnumber: cardNumberController.text,
+          expiryDate: expiryController.text,
+          cvv: cvvController.text,
+          cardHolderName: cardHolderNameController.text,
+          customerName: widget.customerName,
+          transactionAmount: (widget.amount * 100),
+          transactionId: "",
+          contactNumber: widget.mobile,
+          paymentMethod: "debit",
+          email: widget.email,
+          isWebContentAvailable: true,
+          webContent: response?["msg"]);
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) {
+          return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
+        },
+      ));
+    } else {
+      AppDialog.commonWarningDialog(
+          themeColor: widget.themeColor ?? AppColors.primaryColor,
+          useMobileLayout: useMobileLayout,
+          context: context,
+          title: "Error".translate(),
+          subTitle: response?["message"],
+          buttonOnTap: () {
+            Navigator.pop(context);
+          },
+          buttonText: "Okay".translate());
+    }
+  }
   bottomContainer() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -2251,10 +2283,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         });
       },
     );
-  }
-
-  Future<bool> checkTokenIsValidOrNot() async {
-    return await AppServices.checkAccessToken(token: widget.token);
   }
 
   double roundOffToXDecimal(double number, {int numberOfDecimal = 2}) {

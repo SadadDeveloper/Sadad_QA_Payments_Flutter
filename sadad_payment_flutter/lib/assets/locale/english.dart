@@ -79,5 +79,7 @@ Map<String, String> en = {
   "Invalid amount" : "Invalid amount",
   "Sandbox mode" :"Sandbox mode",
   "Sorry, Apple pay is not allowed in sandbox." : "Sorry, Apple pay is not allowed in sandbox.",
+  "Transaction in Progress" : "Transaction in Progress",
+  "Are you sure you want to cancel this transaction? Any progress will be lost, and the transaction will not be completed." : "Are you sure you want to cancel this transaction? Any progress will be lost, and the transaction will not be completed.",
 
 };

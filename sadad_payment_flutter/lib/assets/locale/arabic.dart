@@ -84,5 +84,7 @@ Map<String, String> ar = {
   "Invalid amount": "مبلغ غير صحيح",
   "Sandbox mode" :"وضع الحماية",
   "Sorry, Apple pay is not allowed in sandbox." : "عذرًا، خدمة Apple pay غير مسموح بها في وضع الحماية.",
+  "Transaction in Progress" : "المعاملة قيد التنفيذ",
+  "Are you sure you want to cancel this transaction? Any progress will be lost, and the transaction will not be completed." : "هل أنت متأكد أنك تريد إلغاء هذه المعاملة؟ سيتم فقدان أي تقدم، ولن تكتمل المعاملة.",
 
 };

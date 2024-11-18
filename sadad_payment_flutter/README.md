@@ -16,8 +16,16 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 
 ## Prerequisites
 
-- Learn about the <a href="https://razorpay.com/docs/payment-gateway/payment-flow/" target="_blank">Sadad Payment Flow</a>.
-- Sign up for a <a href="https://dashboard.razorpay.com/#/access/signin">SadadPay Account</a> and generate the <a href="https://razorpay.com/docs/payment-gateway/dashboard-guide/settings/#api-keys/" target="_blank">API Keys</a> from the Sadad Dashboard. Using the Test keys helps simulate a sandbox environment. No actual monetary transaction happens when using the Test keys. Use Live keys once you have thoroughly tested the application and are ready to go live.
+- Sign up for a Sadad Account and generate the API Keys from the <a href="https://panel.sadad.qa" target="_blank">Sadad Dashboard</a>. Using the Test keys helps simulate a sandbox environment. No actual monetary transaction happens when using the Test keys. Use Live keys once you have thoroughly tested the application and are ready to go live.
+
+## Prerequisites For Google Pay (production only)
+- Register your business from  <a href="https://pay.google.com/business/console/" target="_blank">Google Pay</a> Console. For a hassle-free go live process, register the business under the same Google account which is used for your application on Google PlayStore.
+- Once the basic regsitration and verification on Google Pay is completed, visit the above link again and go to Google Pay API from the left side menu. You should see your hosted Google Play applications there.
+- Click on the Manage button under relevant application to which you want to integrate Google Pay using Sadad Flutter SDK. The application will be in "Not started" state initally. SS1.png
+- On the next page select Integration type "Gateway". Under "Screenshots of your buyflow" upload all the relevant screenshots from your Flutter application with Sadad Flutter SDK integrated with sandbox mode enabled. You may click View Examples button to see sample screenshots. SS2.png
+- Once uploaded submit the application for review by accepting terms and conditions and checking the items in the checlist.
+- You will recevie an email from Google Pay once your integration with app is verified. Visit Google Pay business console again from the link mentioned above and on the top right side, you will see your Google Pay merchant ID. SS3.png
+- While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in <parameter_name> . Example mentioned below.
 
 ## Installation
 
@@ -113,14 +121,14 @@ Here is the parameter type and description to pass.
 
 Here is the response parameter list and description.
 
-| Field Name | Type   | Description                                         |
-| ---------- | ------ |-----------------------------------------------------|
-| orderid  | String | Order id which you have passed.                     |
-| transaction id    | String | Transaction id of the transaction.                  |
-| status  | String | Status of your payment.1 = success, 2 = failed.   |
-| amount  | String | Transaction amount.                                 |
-| payment mode    | String | Mode which user has selected for the payment. Ex. CREDIT CARD,GOOGLE PAY, DEBIT CARD       |
-| transactionmode  | String | Transaction mode. Ex. 1 = Sandbox, 2 = Production |
+| Field Name | Type   | Description                                                                          |
+| ---------- | ------ |--------------------------------------------------------------------------------------|
+| orderid  | String | Order id which you have passed.                                                      |
+| transaction id    | String | Transaction id of the transaction.                                                   |
+| status  | String | Status of your payment.3 = success, 2 = failed.                                      |
+| amount  | String | Transaction amount.                                                                  |
+| payment mode    | String | Mode which user has selected for the payment. Ex. CREDIT CARD,GOOGLE PAY, DEBIT CARD |
+| transactionmode  | String | Transaction mode. Ex. 1 = Sandbox, 2 = Production                                    |
 
 
 ### Example of customisation
@@ -171,5 +179,5 @@ Example 2 :
 ```
 Output 2:
 
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 59 41](https://github.com/HardikVyasSelf/Sadad_SDK_Temp/assets/80443136/7ae37911-41af-4a6e-b453-7e901da927ba)
+![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 59 41](https://dev.azure.com/sadad-ecommerce/_git/FlutterPaymentSDK?path=/assets/SDKScreenShot.png&version=GBmain)
 

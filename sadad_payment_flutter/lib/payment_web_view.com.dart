@@ -39,20 +39,36 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(backgroundColor: widget.webViewDetailsModel.themeColor),
-        body: Stack(
-          children: [
-            if (isLoading) ...[
-              Center(
-                child: CircularProgressIndicator(
-                  color: widget.webViewDetailsModel.themeColor,
-                ),
-              )
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if(didPop) return;
+        onBack();
+      },
+      canPop: false,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: widget.webViewDetailsModel.themeColor,
+            leading:  IconButton(
+              onPressed: () => onBack(),
+              icon: Icon(
+                Icons.arrow_back_ios_new_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          body: Stack(
+            children: [
+              if (isLoading) ...[
+                Center(
+                  child: CircularProgressIndicator(
+                    color: widget.webViewDetailsModel.themeColor,
+                  ),
+                )
+              ],
+              WebViewWidget(controller: webController),
             ],
-            WebViewWidget(controller: webController!),
-          ],
-        ));
+          )),
+    );
   }
 
   WebViewController webController = WebViewController()
@@ -63,12 +79,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     ..setNavigationDelegate(
       NavigationDelegate(
         onProgress: (int progress) {},
-        onPageStarted: (String url) {
-        },
-        onPageFinished: (String url) {
-        },
-        onWebResourceError: (WebResourceError error) {
-        },
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
       ),
     );
 
@@ -124,8 +137,12 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         });
       },
       onWebResourceError: (WebResourceError error) {
+
       },
     ));
+    webController.setOnConsoleMessage((message) {
+      print(message.message);
+    },);
 
     // webController.addJavaScriptChannel(
     //   "",
@@ -139,134 +156,68 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
 
     int amount = (widget.webViewDetailsModel.transactionAmount!).toInt();
     if (widget.webViewDetailsModel.paymentMethod == "credit") {
-      if(widget.webViewDetailsModel.isWebContentAvailable == true) {
+      if (widget.webViewDetailsModel.isWebContentAvailable == true) {
+        String? webViewString = widget.webViewDetailsModel.webContent;
+        webController.loadHtmlString(webViewString as String);
+      } else {}
+    } else if (widget.webViewDetailsModel.paymentMethod == "debit") {
+      if (widget.webViewDetailsModel.isWebContentAvailable == true) {
         String? webViewString = widget.webViewDetailsModel.webContent;
         webController.loadHtmlString(webViewString as String);
       } else {
-      String? ipAddress = await NetworkInfo().getWifiIPv6();
-      String merchantID = widget.webViewDetailsModel.merchantUserId ?? ""; //"9246722"
-
-      String? cardNumberWithoutSpace = widget.webViewDetailsModel.cardnumber?.replaceAll("-", "");
-      List tempExpiryDate = widget.webViewDetailsModel.expiryDate!.split("/");
-      var expiryDate = tempExpiryDate.last.toString() + tempExpiryDate.first.toString();
-      var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
-      postString =
-          "issandboxmode=${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=${lang}&carduser_id=$merchantID&mobileOS=${Platform.isIOS ? "1" : "2"}&is_Flutter=1&vpc_Version=1&transactionEntityId=9&deviceIp=$ipAddress&transactionmodeId=1&MID=${widget.webViewDetailsModel.sadadId}&vpc_Command=pay&vpc_Merchant=${widget.webViewDetailsModel.sadadId}&vpc_AccessCode=F4996AF0&vpc_OrderInfo=Test Order&vpc_Amount=$amount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS 2.5 Party_DR.php&vpc_Gateway=ssl&vpc_card=${widget.webViewDetailsModel.creditcardType}&vpc_CardNum=$cardNumberWithoutSpace&vpc_CardExp=$expiryDate&vpc_CardSecurityCode=${widget.webViewDetailsModel.cvv}&vpc_MerchTxnRef=${widget.webViewDetailsModel.transactionId}&firstName=${widget.webViewDetailsModel.cardHolderName!.split(" ").first}&lastName=${widget.webViewDetailsModel.cardHolderName!.split(" ").last}&nameOnCard=${widget.webViewDetailsModel.cardHolderName}&email=${widget.webViewDetailsModel.email}&mobilePhone=974${widget.webViewDetailsModel.contactNumber}&city=$city&country=$country";
-      // if (widget.webViewDetailsModel.creditcardType == "Amex") {
-      //   postString += "&transactionEntityId=9";
-      // }
-      var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-      String encodedString = base64.encode(utf8.encode(temp)).trim();
-      String? cardNumber = widget.webViewDetailsModel.cardnumber;
-      String cardType = getCardType(cardNumber!);
-      String? creditCardType = widget.webViewDetailsModel.creditcardType;
-      bool? isAmexAllowed = widget.webViewDetailsModel.isAmexEnableForAdmin;
-
-        if (isAmexAllowed! && cardType == "Amex") {
-          creditCardUrl = ApiEndPoint.amex_creditCardURL;
-        } else {
-          creditCardUrl = ApiEndPoint.mpgs_pay_creditCardURL;
-        }
-        // else if (creditCardType == "3") //CREDIT_CARD_BANK_TYPE_CYBER{
-        //   {
-        //   if (cardType == "Mastercard" &&
-        //       widget.webViewDetailsModel.isMasterEnableForCyber == 1 &&
-        //       widget.webViewDetailsModel.isMasterEnableForCyberAdmin == 1) {
-        //     isCyberSorurce = true;
-        //   } else if (cardType == "Visa" &&
-        //       widget.webViewDetailsModel.isVisaEnableForCyber == 1 &&
-        //       widget.webViewDetailsModel.isVisaEnableForCyberAdmin == 1) {
-        //     isCyberSorurce = true;
+        // postString = "${widget.webViewDetailsModel.transactionAmount}";
+        // var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+        // String tempEncoded = base64.encode(utf8.encode(temp)).trim();
+        // var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+        // var mobileos = Platform.isIOS ? "1" : "2";
+        //
+        // Map<String, dynamic> body = {
+        //   "issandboxmode": '${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}',
+        //   "amount": (widget.webViewDetailsModel.transactionAmount!).toInt(),
+        //   "isLanguage": '${lang}',
+        //   "PUN": '${widget.webViewDetailsModel.transactionId ?? ""}',
+        //   "SID": '${widget.webViewDetailsModel.sadadId}',
+        //   "merchant_code": '${widget.webViewDetailsModel.sadadId}',
+        //   "mobileos": '${mobileos}',
+        // };
+        //
+        // var encodedFinal =
+        //     "issandboxmode=${(widget.webViewDetailsModel.packageMode == PackageMode.debug)
+        //     ? "1"
+        //     : "0"}&amount=${tempEncoded}&isLanguage=${lang}&PUN=${widget.webViewDetailsModel.transactionId ??
+        //     ""}&SID=${widget.webViewDetailsModel.sadadId}&merchant_code=${widget.webViewDetailsModel.sadadId}";
+        // Map? htmlString = await AppServices.debitCardWebViewRequest(encodedString: body);
+        // String? webViewString;
+        // if (htmlString == null && context.mounted) {
+        //   AppDialog.commonWarningDialog(
+        //       themeColor: widget.webViewDetailsModel.themeColor,
+        //       useMobileLayout: useMobileLayout,
+        //       context: context,
+        //       title: "Issue".translate(),
+        //       subTitle: "Sorry, We are not able to process the transaction. Please try again.".translate(),
+        //       buttonOnTap: () {
+        //         Navigator.pop(context);
+        //         Navigator.pop(context);
+        //       },
+        //       buttonText: "Okay");
+        // } else {
+        //   if (htmlString?["status"].toString() == "success") {
+        //     webViewString = htmlString?["msg"];
+        //     webController.loadHtmlString(webViewString as String);
         //   } else {
-        //     isCyberSorurce = false;
+        //     AppDialog.commonWarningDialog(
+        //         themeColor: widget.webViewDetailsModel.themeColor,
+        //         useMobileLayout: useMobileLayout,
+        //         context: context,
+        //         title: "Issue".translate(),
+        //         subTitle: htmlString?["msg"].toString() ?? "",
+        //         buttonOnTap: () {
+        //           Navigator.pop(context);
+        //           Navigator.pop(context);
+        //         },
+        //         buttonText: "Okay");
         //   }
         // }
-        // else if (creditCardType == "0") //CREDIT_CARD_BANK_TYPE_MIGS
-        // {
-        //   creditCardUrl = ApiEndPoint.test_migs_pay_creditCardURL;
-        // }
-
-        Map? htmlString =
-        await AppServices.creditCardWebViewRequest(encodedString: encodedString, creditCardUrl: creditCardUrl);
-        String? webViewString;
-        if (htmlString == null && context.mounted) {
-          AppDialog.commonWarningDialog(
-              themeColor: widget.webViewDetailsModel.themeColor,
-              useMobileLayout: useMobileLayout,
-              context: context,
-              title: "Issue".translate(),
-              subTitle: "Sorry, We are not able to process the transaction. Please try again.".translate(),
-              buttonOnTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              buttonText: "Okay");
-        } else {
-          if (htmlString?["status"].toString() == "success") {
-            webViewString = htmlString?["msg"];
-            webController.loadHtmlString(webViewString as String);
-          } else {
-            AppDialog.commonWarningDialog(
-                themeColor: widget.webViewDetailsModel.themeColor,
-                useMobileLayout: useMobileLayout,
-                context: context,
-                title: "Issue".translate(),
-                subTitle: htmlString?["msg"].toString() ?? "",
-                buttonOnTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                buttonText: "Okay");
-          }
-        }
-      }
-    } else if (widget.webViewDetailsModel.paymentMethod == "debit") {
-      postString = "${widget.webViewDetailsModel.transactionAmount}";
-      var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-      String tempEncoded = base64.encode(utf8.encode(temp)).trim();
-      var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
-      Map<String, dynamic> body = {
-          "issandboxmode": '${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}',
-          "amount": (widget.webViewDetailsModel.transactionAmount!).toInt(),
-          "isLanguage": '${lang}',
-          "PUN": '${widget.webViewDetailsModel.transactionId ?? ""}',
-          "SID": '${widget.webViewDetailsModel.sadadId}',
-          "merchant_code": '${widget.webViewDetailsModel.sadadId}'
-      };
-
-      var encodedFinal =
-          "issandboxmode=${(widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0"}&amount=${tempEncoded}&isLanguage=${lang}&PUN=${widget.webViewDetailsModel.transactionId ?? ""}&SID=${widget.webViewDetailsModel.sadadId}&merchant_code=${widget.webViewDetailsModel.sadadId}";
-      Map? htmlString = await AppServices.debitCardWebViewRequest(encodedString: body);
-      String? webViewString;
-      if (htmlString == null && context.mounted) {
-        AppDialog.commonWarningDialog(
-            themeColor: widget.webViewDetailsModel.themeColor,
-            useMobileLayout: useMobileLayout,
-            context: context,
-            title: "Issue".translate(),
-            subTitle: "Sorry, We are not able to process the transaction. Please try again.".translate(),
-            buttonOnTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            buttonText: "Okay");
-      } else {
-        if (htmlString?["status"].toString() == "success") {
-          webViewString = htmlString?["msg"];
-          webController.loadHtmlString(webViewString as String);
-        } else {
-          AppDialog.commonWarningDialog(
-              themeColor: widget.webViewDetailsModel.themeColor,
-              useMobileLayout: useMobileLayout,
-              context: context,
-              title: "Issue".translate(),
-              subTitle: htmlString?["msg"].toString() ?? "",
-              buttonOnTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              buttonText: "Okay");
-        }
       }
     } else if (widget.webViewDetailsModel.paymentMethod == "sadadPay") {
       // String? htmlString = await AppServices.sadadPayWebViewRequest(
@@ -304,7 +255,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       // var htmlString = await AppServices.applePayWebviewRequest(encodedString: encodedString);
       // webController.loadHtmlString(htmlString as String);
 
-      var test = await AppServices.applePayment(token: widget.webViewDetailsModel.token.toString(),
+      var test = await AppServices.applePayment(
+          token: widget.webViewDetailsModel.token.toString(),
           mobileNumber: widget.webViewDetailsModel.contactNumber.toString(),
           txnAmount: widget.webViewDetailsModel.transactionAmount ?? 0.0,
           productDetail: widget.webViewDetailsModel.productDetail,
@@ -316,8 +268,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
           email: widget.webViewDetailsModel.email.toString(),
           firstname: "firstname",
           issandboxmode: (widget.webViewDetailsModel.packageMode == PackageMode.debug) ? "1" : "0",
-          transactionId: widget.webViewDetailsModel.transactionId.toString(), merchantSadadID: merchantSadadID);
-      if(test.toString().contains("div")) {
+          transactionId: widget.webViewDetailsModel.transactionId.toString(),
+          merchantSadadID: merchantSadadID);
+      if (test.toString().contains("div")) {
         webController.loadHtmlString(test as String);
       } else {
         AppDialog.commonWarningDialog(
@@ -333,23 +286,23 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             buttonText: "Okay");
       }
       //     {
-  //       "token":"",
-  //   "mobileNumber": "9714407618",
-  //   "orderId": "sd1111111011",
-  //   "txnAmount" : 10,
-  //   "ProductDetails" : [],
-  //   "ipAddress" : "0.0.0.1",
-  //   "merchantID" : 552,
-  //   "lang" : "ar",
-  //   "emailId" : "test@gmail.com",
-  //   "cardHolderName" : "test sadad",
-  //   "issandboxmode" : "0",
-  //   "country" : "ind",
-  //   "merchantSadadID" : "123456",
-  //   "checksum" : "sfdekfdnbwjfengtrh5nkvnfknjn kfenrknf",
-  //   "transactionId" : "1234"
-  //
-  // }
+      //       "token":"",
+      //   "mobileNumber": "9714407618",
+      //   "orderId": "sd1111111011",
+      //   "txnAmount" : 10,
+      //   "ProductDetails" : [],
+      //   "ipAddress" : "0.0.0.1",
+      //   "merchantID" : 552,
+      //   "lang" : "ar",
+      //   "emailId" : "test@gmail.com",
+      //   "cardHolderName" : "test sadad",
+      //   "issandboxmode" : "0",
+      //   "country" : "ind",
+      //   "merchantSadadID" : "123456",
+      //   "checksum" : "sfdekfdnbwjfengtrh5nkvnfknjn kfenrknf",
+      //   "transactionId" : "1234"
+      //
+      // }
     } else if (widget.webViewDetailsModel.paymentMethod == "googlePay") {
       Future.delayed(const Duration(seconds: 2), () {
         webController.loadHtmlString(widget.webViewDetailsModel.htmlString as String);
@@ -426,5 +379,29 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         //Navigator.pop(context, transactionDetails);
       }
     }
+  }
+
+  void onBack() {
+    AppDialog.commonWarningDialogWithTwoButton(
+        themeColor: widget.webViewDetailsModel.themeColor,
+        useMobileLayout: useMobileLayout,
+        context: context,
+        title: "Transaction in Progress".translate(),
+        subTitle: "Are you sure you want to cancel this transaction? Any progress will be lost, and the transaction will not be completed.".translate(),
+        negativeButtonOnTap: () {
+          Navigator.pop(context);
+        },
+        negativeButtonText: "Back".translate(),
+        positiveButtonOnTap: () {
+          Map<String, String> cancelPayment = {
+            'status': 'cancelled transaction',
+            'message': 'Transaction cancelled by the user.',
+          };
+          //Map tempMessage = jsonDecode(p0.message);
+          //print("tempMessage::$cancelPayment");
+          Navigator.pop(context, cancelPayment);
+          Navigator.pop(context, cancelPayment);
+        },
+        positiveButtonText: "Yes, cancel".translate());
   }
 }
