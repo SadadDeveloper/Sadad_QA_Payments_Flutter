@@ -1,16 +1,6 @@
-# Razorpay Flutter
+# SadadPay Flutter
 
 Flutter plugin for Sadad Payment SDK.
-
-[![pub package](https://img.shields.io/pub/v/razorpay_flutter.svg)](https://pub.dartlang.org/packages/razorpay_flutter)
-
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Example of customisation](#troubleshooting)
-- [API](#api)
-- [Example App](https://github.com/razorpay/razorpay-flutter/tree/master/example)
 
 ## Getting Started
 
@@ -23,8 +13,25 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 
 ## Prerequisites
 
-- Learn about the <a href="https://razorpay.com/docs/payment-gateway/payment-flow/" target="_blank">Sadad Payment Flow</a>.
-- Sign up for a <a href="https://dashboard.razorpay.com/#/access/signin">SadadPay Account</a> and generate the <a href="https://razorpay.com/docs/payment-gateway/dashboard-guide/settings/#api-keys/" target="_blank">API Keys</a> from the Sadad Dashboard. Using the Test keys helps simulate a sandbox environment. No actual monetary transaction happens when using the Test keys. Use Live keys once you have thoroughly tested the application and are ready to go live.
+- Sign up for a Sadad Account and generate the API Keys from the <a href="https://panel.sadad.qa" target="_blank">Sadad Dashboard</a>. Using the Test keys helps simulate a sandbox environment. No actual monetary transaction happens when using the Test keys. Use Live keys once you have thoroughly tested the application and are ready to go live.
+
+## Prerequisites For Google Pay (production only)
+- Register your business from  <a href="https://pay.google.com/business/console/" target="_blank">Google Pay</a> Console. For a hassle-free go live process, register the business under the same Google account which is used for your application on Google PlayStore.
+- Once the basic regsitration and verification on Google Pay is completed, visit the above link again and go to Google Pay API from the left side menu. You should see your hosted Google Play applications there.
+- Click on the Manage button under relevant application to which you want to integrate Google Pay using Sadad Flutter SDK. The application will be in "Not started" state initally.
+
+![googleSS1.png](/assets/googleSS1.png)
+
+- On the next page select Integration type "Gateway". Under "Screenshots of your buyflow" upload all the relevant screenshots from your Flutter application with Sadad Flutter SDK integrated with sandbox mode enabled. You may click View Examples button to see sample screenshots.
+
+![googleSS2.png](/assets/googleSS2.png)
+
+- Once uploaded submit the application for review by accepting terms and conditions and checking the items in the checlist.
+- You will recevie an email from Google Pay once your integration with app is verified. Visit Google Pay business console again from the link mentioned above and on the top right side, you will see your Google Pay merchant ID.
+
+![googleSS3.png](/assets/googleSS3.png)
+
+- While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in <parameter_name> . Example mentioned below.
 
 ## Installation
 
@@ -37,9 +44,6 @@ sadad_payment_flutter: ^0.0.37
 ```
 
 **Note for Android**: Make sure that the minimum API level for your app is 21 or higher.
-
-
-Follow [this](https://github.com/HardikVyasSelf/Sadad_SDK_Temp/issues) for more details.
 
 **Note for iOS**: Make sure that the minimum deployment target for your app is iOS 12.0 or higher. Also, don't forget to enable bitcode for your project.
 
@@ -61,22 +65,26 @@ import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
   InkWell(onTap: () async {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return PaymentScreen(
-                          orderId: "fdsgcfmgjd434234rgdrg",
-                          productDetail: [],
-                          customerName: "demo",
-                          amount: total(),
-                          email: "demo@gmail.com",
-                          mobile: "98987879",
-                          token: token,
-                          packageMode: PackageMode.debug,
-                          isWalletEnabled: true,
-                          paymentTypes: [PaymentType.creditCard,PaymentType.sadadPay,PaymentType.debitCard],
-                          image: Image.asset("assets/meera.jpg"),
-                          titleText: "AL Meera Hyper Market",
-                          paymentButtonColor: Colors.green,
-                          paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.blue);
+                    return PaymentScreen(
+                        orderId: "fdsgcfmgjd43424342g",
+                        productDetail: [
+                        {"test": "jhjkkk", "test2": "dfdsf"}
+                        ],
+                        customerName: "demo",
+                        amount: 13.5,
+                        email: "demo@gmail.com",
+                        mobile: "98989898",
+                        token: token,
+                        packageMode: PackageMode.debug,
+                        isWalletEnabled: true,
+                        paymentTypes: [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay],
+                        image: Image.asset("assets/sample-Logo.jpg"),
+                        titleText: "Lorem Ipsum",
+                        paymentButtonColor: Colors.black,
+                        paymentButtonTextColor: Colors.white,
+                        themeColor: Colors.green,
+                        googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                        googleMerchantName: 'Sadad Payment Solutions');
                     },
                   )).then((value) {
                     setState(() {
@@ -123,14 +131,14 @@ Here is the parameter type and description to pass.
 
 Here is the response parameter list and description.
 
-| Field Name | Type   | Description                                         |
-| ---------- | ------ |-----------------------------------------------------|
-| orderid  | String | Order id which you have passed.                     |
-| transaction id    | String | Transaction id of the transaction.                  |
-| status  | String | Status of your payment.1 = success, 2 = failed.   |
-| amount  | String | Transaction amount.                                 |
-| payment mode    | String | Mode which user has selected for the payment. Ex. CREDIT CARD,GOOGLE PAY, DEBIT CARD       |
-| transactionmode  | String | Transaction mode. Ex. 1 = Sandbox, 2 = Production |
+| Field Name | Type   | Description                                                                          |
+| ---------- | ------ |--------------------------------------------------------------------------------------|
+| orderid  | String | Order id which you have passed.                                                      |
+| transaction id    | String | Transaction id of the transaction.                                                   |
+| status  | String | Status of your payment.3 = success, 2 = failed.                                      |
+| amount  | String | Transaction amount.                                                                  |
+| payment mode    | String | Mode which user has selected for the payment. Ex. CREDIT CARD,GOOGLE PAY, DEBIT CARD |
+| transactionmode  | String | Transaction mode. Ex. 1 = Sandbox, 2 = Production                                    |
 
 
 ### Example of customisation
@@ -138,7 +146,7 @@ Here is the response parameter list and description.
 Example 1 :
 
 ```dart
-PaymentScreen(
+                    PaymentScreen(
                           orderId: "fdsgcfmgjd43424342g",
                           productDetail: [],
                           customerName: "demo",
@@ -153,16 +161,17 @@ PaymentScreen(
                           titleText: "Lorem Ipsum",
                           paymentButtonColor: Colors.black,
                           paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.green)
+                          themeColor: Colors.green,
+                          googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                          googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 1:
-
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 52 12](https://github.com/HardikVyasSelf/Sadad_SDK_Temp/assets/80443136/669a728f-21c6-4eda-8619-044d02b708a6)
+![SDKScreenShot.png](/assets/SDKScreenShot.png)
 
 Example 2 :
 
 ```dart
- PaymentScreen(
+                    PaymentScreen(
                           orderId: "fdsgcfmgjd43424342g",
                           productDetail: [],
                           customerName: "demo",
@@ -177,9 +186,11 @@ Example 2 :
                           titleText: "Lorem Sample",
                           paymentButtonColor: Colors.red,
                           paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.brown)
+                          themeColor: Colors.brown
+                          googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                          googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 2:
 
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 59 41](https://github.com/HardikVyasSelf/Sadad_SDK_Temp/assets/80443136/7ae37911-41af-4a6e-b453-7e901da927ba)
+![SDKScreenShot.png](/assets/SDKScreenShot2.png)
 
