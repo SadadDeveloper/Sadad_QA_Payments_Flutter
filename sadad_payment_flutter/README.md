@@ -2,9 +2,6 @@
 
 Flutter plugin for Sadad Payment SDK.
 
-[![pub package](https://img.shields.io/pub/v/razorpay_flutter.svg)](https://pub.dartlang.org/packages/razorpay_flutter)
-
-
 ## Getting Started
 
 This flutter plugin is a wrapper around our Android and iOS SDKs.
@@ -21,10 +18,19 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 ## Prerequisites For Google Pay (production only)
 - Register your business from  <a href="https://pay.google.com/business/console/" target="_blank">Google Pay</a> Console. For a hassle-free go live process, register the business under the same Google account which is used for your application on Google PlayStore.
 - Once the basic regsitration and verification on Google Pay is completed, visit the above link again and go to Google Pay API from the left side menu. You should see your hosted Google Play applications there.
-- Click on the Manage button under relevant application to which you want to integrate Google Pay using Sadad Flutter SDK. The application will be in "Not started" state initally. SS1.png
-- On the next page select Integration type "Gateway". Under "Screenshots of your buyflow" upload all the relevant screenshots from your Flutter application with Sadad Flutter SDK integrated with sandbox mode enabled. You may click View Examples button to see sample screenshots. SS2.png
+- Click on the Manage button under relevant application to which you want to integrate Google Pay using Sadad Flutter SDK. The application will be in "Not started" state initally.
+
+![googleSS1.png](/assets/googleSS1.png)
+
+- On the next page select Integration type "Gateway". Under "Screenshots of your buyflow" upload all the relevant screenshots from your Flutter application with Sadad Flutter SDK integrated with sandbox mode enabled. You may click View Examples button to see sample screenshots.
+
+![googleSS2.png](/assets/googleSS2.png)
+
 - Once uploaded submit the application for review by accepting terms and conditions and checking the items in the checlist.
-- You will recevie an email from Google Pay once your integration with app is verified. Visit Google Pay business console again from the link mentioned above and on the top right side, you will see your Google Pay merchant ID. SS3.png
+- You will recevie an email from Google Pay once your integration with app is verified. Visit Google Pay business console again from the link mentioned above and on the top right side, you will see your Google Pay merchant ID.
+
+![googleSS3.png](/assets/googleSS3.png)
+
 - While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in <parameter_name> . Example mentioned below.
 
 ## Installation
@@ -162,10 +168,6 @@ Example 1 :
 Output 1:
 ![SDKScreenShot.png](/assets/SDKScreenShot.png)
 
-![SDKScreenShot.png](./Resources/Architecture&#32;view&#32;for&#32;AllProjects.png)
-
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 52 12](https://dev.azure.com/sadad-ecommerce/_git/FlutterPaymentSDK?path=/assets/SDKScreenShot.png&version=GBmain)
-
 Example 2 :
 
 ```dart
@@ -190,5 +192,5 @@ Example 2 :
 ```
 Output 2:
 
-![Simulator Screenshot - iPhone 14 Pro Max - 2024-05-24 at 10 59 41](https://dev.azure.com/sadad-ecommerce/_git/FlutterPaymentSDK?path=/assets/SDKScreenShot.png&version=GBmain)
+![SDKScreenShot.png](/assets/SDKScreenShot2.png)
 
