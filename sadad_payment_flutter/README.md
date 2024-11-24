@@ -59,22 +59,26 @@ import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
   InkWell(onTap: () async {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return PaymentScreen(
-                          orderId: "fdsgcfmgjd434234rgdrg",
-                          productDetail: [],
-                          customerName: "demo",
-                          amount: total(),
-                          email: "demo@gmail.com",
-                          mobile: "98987879",
-                          token: token,
-                          packageMode: PackageMode.debug,
-                          isWalletEnabled: true,
-                          paymentTypes: [PaymentType.creditCard,PaymentType.sadadPay,PaymentType.debitCard],
-                          image: Image.asset("assets/meera.jpg"),
-                          titleText: "AL Meera Hyper Market",
-                          paymentButtonColor: Colors.green,
-                          paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.blue);
+                    return PaymentScreen(
+                        orderId: "fdsgcfmgjd43424342g",
+                        productDetail: [
+                        {"test": "jhjkkk", "test2": "dfdsf"}
+                        ],
+                        customerName: "demo",
+                        amount: 13.5,
+                        email: "demo@gmail.com",
+                        mobile: "98989898",
+                        token: token,
+                        packageMode: PackageMode.debug,
+                        isWalletEnabled: true,
+                        paymentTypes: [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay],
+                        image: Image.asset("assets/sample-Logo.jpg"),
+                        titleText: "Lorem Ipsum",
+                        paymentButtonColor: Colors.black,
+                        paymentButtonTextColor: Colors.white,
+                        themeColor: Colors.green,
+                        googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                        googleMerchantName: 'Sadad Payment Solutions');
                     },
                   )).then((value) {
                     setState(() {
@@ -136,7 +140,7 @@ Here is the response parameter list and description.
 Example 1 :
 
 ```dart
-PaymentScreen(
+                    PaymentScreen(
                           orderId: "fdsgcfmgjd43424342g",
                           productDetail: [],
                           customerName: "demo",
@@ -151,7 +155,9 @@ PaymentScreen(
                           titleText: "Lorem Ipsum",
                           paymentButtonColor: Colors.black,
                           paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.green)
+                          themeColor: Colors.green,
+                          googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                          googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 1:
 ![SDKScreenShot.png](/assets/SDKScreenShot.png)
@@ -163,7 +169,7 @@ Output 1:
 Example 2 :
 
 ```dart
- PaymentScreen(
+                    PaymentScreen(
                           orderId: "fdsgcfmgjd43424342g",
                           productDetail: [],
                           customerName: "demo",
@@ -178,7 +184,9 @@ Example 2 :
                           titleText: "Lorem Sample",
                           paymentButtonColor: Colors.red,
                           paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.brown)
+                          themeColor: Colors.brown
+                          googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                          googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 2:
 

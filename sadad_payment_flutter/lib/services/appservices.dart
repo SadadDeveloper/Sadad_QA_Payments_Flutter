@@ -36,7 +36,6 @@ class AppServices {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         if(result != null) {

@@ -98,23 +98,25 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return PaymentScreen(
-                          orderId: "fdsgcfmgjd43424342g",
-                          productDetail: [
-                            {"test": "jhjkkk", "test2": "dfdsf"}
-                          ],
-                          customerName: "demo",
-                          amount: 13.5,
-                          email: "demo@gmail.com",
-                          mobile: "98989898",
-                          token: token,
-                          packageMode: _isSwitchOn ? PackageMode.debug : PackageMode.release,
-                          isWalletEnabled: true,
-                          paymentTypes: [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay],
-                          image: Image.asset("assets/sample-Logo.jpg"),
-                          titleText: "Lorem Ipsum",
-                          paymentButtonColor: Colors.black,
-                          paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.green, googleMerchantID: 'BCR2DN6TR6Y7Z2CJ', googleMerchantName: 'Sadad Payment Solutions',);
+                        orderId: "fdsgcfmgjd43424342g",
+                        productDetail: [
+                          {"test": "jhjkkk", "test2": "dfdsf"}
+                        ],
+                        customerName: "demo",
+                        amount: 13.5,
+                        email: "demo@gmail.com",
+                        mobile: "98989898",
+                        token: token,
+                        packageMode: _isSwitchOn ? PackageMode.debug : PackageMode.release,
+                        isWalletEnabled: true,
+                        paymentTypes: [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay],
+                        image: Image.asset("assets/sample-Logo.jpg"),
+                        titleText: "Lorem Ipsum",
+                        paymentButtonColor: Colors.black,
+                        paymentButtonTextColor: Colors.white,
+                        themeColor: Colors.green,
+                        googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                        googleMerchantName: 'Sadad Payment Solutions');
                     },
                   )).then((value) {
                     setState(() {
