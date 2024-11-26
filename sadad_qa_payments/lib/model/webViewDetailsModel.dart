@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
+import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 
 class WebViewDetailsModel {
   bool? isAmexEnableForAdmin;

@@ -5,11 +5,11 @@ import 'dart:io';
 import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:sadad_payment_flutter/apputils/appdialogs.dart';
-import 'package:sadad_payment_flutter/apputils/extensions.dart';
-import 'package:sadad_payment_flutter/model/webViewDetailsModel.dart';
-import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
-import 'package:sadad_payment_flutter/services/appservices.dart';
+import 'package:sadad_qa_payments/apputils/appdialogs.dart';
+import 'package:sadad_qa_payments/apputils/extensions.dart';
+import 'package:sadad_qa_payments/model/webViewDetailsModel.dart';
+import 'package:sadad_qa_payments/sadad_qa_payments.dart';
+import 'package:sadad_qa_payments/services/appservices.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'services/api_endpoint.dart';
 

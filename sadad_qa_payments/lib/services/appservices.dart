@@ -4,14 +4,14 @@ import 'dart:developer';
 import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sadad_payment_flutter/apputils/appstrings.dart';
-import 'package:sadad_payment_flutter/model/checkedallowedcountrymodel.dart';
-import 'package:sadad_payment_flutter/model/creditcardsettingsmodel.dart';
-import 'package:sadad_payment_flutter/model/sadadpayminimumamountcheckmodel.dart';
-import 'package:sadad_payment_flutter/model/sendOtpModel.dart';
-import 'package:sadad_payment_flutter/model/transactionIdDetailsModel.dart';
-import 'package:sadad_payment_flutter/model/usermetapreference.dart';
-import 'package:sadad_payment_flutter/services/api_endpoint.dart';
+import 'package:sadad_qa_payments/apputils/appstrings.dart';
+import 'package:sadad_qa_payments/model/checkedallowedcountrymodel.dart';
+import 'package:sadad_qa_payments/model/creditcardsettingsmodel.dart';
+import 'package:sadad_qa_payments/model/sadadpayminimumamountcheckmodel.dart';
+import 'package:sadad_qa_payments/model/sendOtpModel.dart';
+import 'package:sadad_qa_payments/model/transactionIdDetailsModel.dart';
+import 'package:sadad_qa_payments/model/usermetapreference.dart';
+import 'package:sadad_qa_payments/services/api_endpoint.dart';
 
 class AppServices {
 

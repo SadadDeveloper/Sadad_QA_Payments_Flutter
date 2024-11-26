@@ -1,4 +1,4 @@
-library sadad_payment_flutter;
+library sadad_qa_payments;
 
 import 'dart:async';
 import 'dart:convert';
@@ -15,21 +15,21 @@ import 'package:flutter/services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:pay/pay.dart';
 import 'package:pinput/pinput.dart';
-import 'package:sadad_payment_flutter/apputils/app_formatter.dart';
-import 'package:sadad_payment_flutter/apputils/appassets.dart';
-import 'package:sadad_payment_flutter/apputils/appcolors.dart';
-import 'package:sadad_payment_flutter/apputils/appdialogs.dart';
-import 'package:sadad_payment_flutter/apputils/extensions.dart';
-import 'package:sadad_payment_flutter/commonWidgets.dart';
-import 'package:sadad_payment_flutter/model/checkedallowedcountrymodel.dart';
-import 'package:sadad_payment_flutter/model/creditcardsettingsmodel.dart';
-import 'package:sadad_payment_flutter/model/sendOtpModel.dart';
-import 'package:sadad_payment_flutter/model/transactionIdDetailsModel.dart';
-import 'package:sadad_payment_flutter/model/usermetapreference.dart';
-import 'package:sadad_payment_flutter/model/webViewDetailsModel.dart';
-import 'package:sadad_payment_flutter/payment_web_view.com.dart';
-import 'package:sadad_payment_flutter/services/api_endpoint.dart';
-import 'package:sadad_payment_flutter/services/appservices.dart';
+import 'package:sadad_qa_payments/apputils/app_formatter.dart';
+import 'package:sadad_qa_payments/apputils/appassets.dart';
+import 'package:sadad_qa_payments/apputils/appcolors.dart';
+import 'package:sadad_qa_payments/apputils/appdialogs.dart';
+import 'package:sadad_qa_payments/apputils/extensions.dart';
+import 'package:sadad_qa_payments/commonWidgets.dart';
+import 'package:sadad_qa_payments/model/checkedallowedcountrymodel.dart';
+import 'package:sadad_qa_payments/model/creditcardsettingsmodel.dart';
+import 'package:sadad_qa_payments/model/sendOtpModel.dart';
+import 'package:sadad_qa_payments/model/transactionIdDetailsModel.dart';
+import 'package:sadad_qa_payments/model/usermetapreference.dart';
+import 'package:sadad_qa_payments/model/webViewDetailsModel.dart';
+import 'package:sadad_qa_payments/payment_web_view.com.dart';
+import 'package:sadad_qa_payments/services/api_endpoint.dart';
+import 'package:sadad_qa_payments/services/appservices.dart';
 
 Locale selectedLanguage = PlatformDispatcher.instance.locale;
 bool useMobileLayout = false;
@@ -488,7 +488,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       height: useMobileLayout ? 50 : 65,
                       margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 40 : 62),
                       child:
-                          Center(child: Image.asset(AssetPath.applePay, package: 'sadad_payment_flutter', height: 22)),
+                          Center(child: Image.asset(AssetPath.applePay, package: 'sadad_qa_payments', height: 22)),
                     ),
                   )
                 :
@@ -949,7 +949,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ImageIcon(AssetImage(imagePath, package: 'sadad_payment_flutter'),
+                      ImageIcon(AssetImage(imagePath, package: 'sadad_qa_payments'),
                           size: 25, color: selectedPaymentMethod == type ? widget.themeColor : AppColors.grey),
                       FittedBox(
                           fit: BoxFit.scaleDown,
@@ -1066,14 +1066,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Image.asset(AssetPath.masterCard, package: 'sadad_payment_flutter', height: 19),
-                          Image.asset(AssetPath.visa, package: 'sadad_payment_flutter', height: 19),
-                          Image.asset(AssetPath.americanExpress, package: 'sadad_payment_flutter', height: 19)
+                          Image.asset(AssetPath.masterCard, package: 'sadad_qa_payments', height: 19),
+                          Image.asset(AssetPath.visa, package: 'sadad_qa_payments', height: 19),
+                          Image.asset(AssetPath.americanExpress, package: 'sadad_qa_payments', height: 19)
                         ],
                       )
                     : getImagePath(cardType).isEmpty
                         ? const SizedBox()
-                        : Image.asset(getImagePath(cardType), package: 'sadad_payment_flutter', height: 19),
+                        : Image.asset(getImagePath(cardType), package: 'sadad_qa_payments', height: 19),
                 themeColor: widget.themeColor ?? primaryColor),
           ),
         ),
@@ -1168,12 +1168,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             cvvDialog();
                           },
                           child: ImageIcon(
-                            const AssetImage(AssetPath.cvvIconPNG, package: 'sadad_payment_flutter'),
+                            const AssetImage(AssetPath.cvvIconPNG, package: 'sadad_qa_payments'),
                             size: 25,
                             color: widget.themeColor,
                           )),
                       // child: SvgPicture.asset(AssetPath.cvvIconSVG,
-                      //     package: 'sadad_payment_flutter', color: widget.themeColor)),
+                      //     package: 'sadad_qa_payments', color: widget.themeColor)),
                       themeColor: widget.themeColor ?? primaryColor),
                 ),
               ),
@@ -1331,7 +1331,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   Image.asset(
                     AssetPath.sadadLogo,
-                    package: 'sadad_payment_flutter',
+                    package: 'sadad_qa_payments',
                     width: 50,
                   ),
                   const SizedBox(height: 5),
@@ -1344,7 +1344,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               //   children: [
               //     Image.asset(
               //       AssetPath.sadadLogo,
-              //       package: 'sadad_payment_flutter',
+              //       package: 'sadad_qa_payments',
               //       width: 50,
               //     ),
               //     SizedBox(height: 5),
@@ -1412,7 +1412,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           });
                         },
                         child: Image.asset(isObscure ? AssetPath.icEyeClose : AssetPath.icEyeOpen,
-                            package: 'sadad_payment_flutter', color: widget.themeColor, height: 20),
+                            package: 'sadad_qa_payments', color: widget.themeColor, height: 20),
                       ),
                     )),
               ],
@@ -1561,9 +1561,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Column(children: [
         Row(
           children: [
-            Image.asset(AssetPath.debitNaps, package: 'sadad_payment_flutter', width: 85),
+            Image.asset(AssetPath.debitNaps, package: 'sadad_qa_payments', width: 85),
             const SizedBox(width: 16),
-            Image.asset(AssetPath.debitHimyan, package: 'sadad_payment_flutter', width: 85),
+            Image.asset(AssetPath.debitHimyan, package: 'sadad_qa_payments', width: 85),
             // Text(
             //   "Debit Card".translate(),
             //   style: TextStyle(color: primaryColor, fontSize: 15, fontWeight: FontWeight.bold),
@@ -1677,7 +1677,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ImageIcon(const AssetImage(AssetPath.lock, package: 'sadad_payment_flutter'),
+              ImageIcon(const AssetImage(AssetPath.lock, package: 'sadad_qa_payments'),
                   size: useMobileLayout ? 10 : 15, color: widget.themeColor),
               const SizedBox(width: 3),
               Text("100% secured Payment ".translate(),
@@ -1700,7 +1700,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 2),
-          child: ImageIcon(const AssetImage(AssetPath.lock, package: 'sadad_payment_flutter'),
+          child: ImageIcon(const AssetImage(AssetPath.lock, package: 'sadad_qa_payments'),
               size: useMobileLayout ? 10 : 15, color: widget.themeColor),
         ),
         const SizedBox(width: 3),
@@ -1723,7 +1723,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       height: 50,
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(color: AppColors.borderColor, borderRadius: BorderRadius.circular(5)),
-      child: Image.asset(imagepath, width: MediaQuery.of(context).size.width * 0.20, package: 'sadad_payment_flutter'),
+      child: Image.asset(imagepath, width: MediaQuery.of(context).size.width * 0.20, package: 'sadad_qa_payments'),
     );
   }
 
@@ -1955,7 +1955,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Image.asset(AssetPath.cvvCard,
-                            package: 'sadad_payment_flutter', width: MediaQuery.of(context).size.width * 0.45),
+                            package: 'sadad_qa_payments', width: MediaQuery.of(context).size.width * 0.45),
                         const SizedBox(height: 15),
                         Text("What is CVV?".translate(),
                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
@@ -2272,7 +2272,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         child: Container(
                           height: useMobileLayout ? 60 : 70,
                           width: useMobileLayout ? 60 : 70,
-                          child: Image.asset(AssetPath.icClose, package: "sadad_payment_flutter", fit: BoxFit.fill),
+                          child: Image.asset(AssetPath.icClose, package: "sadad_qa_payments", fit: BoxFit.fill),
                         ),
                       ))
                 ],

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:demo_sadad/sucess.dart';
 import 'package:flutter/material.dart';
-import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
+import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 import 'package:http/http.dart' as http;
 
 void main() {

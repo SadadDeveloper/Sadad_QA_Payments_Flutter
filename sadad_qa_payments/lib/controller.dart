@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
-import 'package:sadad_payment_flutter/apputils/appassets.dart';
-import 'package:sadad_payment_flutter/model/creditcardsettingsmodel.dart';
-import 'package:sadad_payment_flutter/model/sendOtpModel.dart';
-import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
+import 'package:sadad_qa_payments/apputils/appassets.dart';
+import 'package:sadad_qa_payments/model/creditcardsettingsmodel.dart';
+import 'package:sadad_qa_payments/model/sendOtpModel.dart';
+import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 
 class MainPageController {
 

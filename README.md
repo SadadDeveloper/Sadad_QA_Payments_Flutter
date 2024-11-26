@@ -35,12 +35,12 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 
 ## Installation
 
-This plugin is available on Pub: [https://pub.dev/packages/sadad_payment_flutter](https://pub.dev/packages/sadad_payment_flutter)
+This plugin is available on Pub: [https://pub.dev/packages/sadad_qa_payments](https://pub.dev/packages/sadad_qa_payments)
 
 Add this to `dependencies` in your app's `pubspec.yaml`
 
 ```yaml
-sadad_payment_flutter: ^0.0.37
+sadad_qa_payments: ^0.0.37
 ```
 
 **Note for Android**: Make sure that the minimum API level for your app is 21 or higher.
@@ -56,7 +56,7 @@ Sample code to integrate can be found in [example/lib/main.dart](example/lib/mai
 #### Import package
 
 ```dart
-import 'package:sadad_payment_flutter/sadad_payment_flutter.dart';
+import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 ```
 
 #### Create Razorpay instance

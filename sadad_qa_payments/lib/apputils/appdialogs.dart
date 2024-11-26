@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sadad_payment_flutter/apputils/appcolors.dart';
-import 'package:sadad_payment_flutter/apputils/appstrings.dart';
+import 'package:sadad_qa_payments/apputils/appcolors.dart';
+import 'package:sadad_qa_payments/apputils/appstrings.dart';
 
 class AppDialog {
   static showProcess(BuildContext context, Color progressColor) {

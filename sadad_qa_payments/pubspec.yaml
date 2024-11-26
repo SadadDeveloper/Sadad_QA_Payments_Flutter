@@ -1,7 +1,7 @@
-name: sadad_payment_flutter
+name: sadad_qa_payments
 description: Implement sadad payment sdk ..
 version: 0.0.01
-homepage: https://github.com/HardikVyasSelf/Sadad_SDK_Temp.git
+homepage: https://github.com/SadadDeveloper/Sadad_QA_Payments_Flutter
 
 environment:
   sdk: '>=2.19.6 <4.0.0'
