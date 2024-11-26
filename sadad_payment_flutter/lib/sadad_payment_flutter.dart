@@ -1252,7 +1252,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         });
                         selectedPaymentMethod = PaymentType.debitCard;
                         OnTapDebitCard();
-
                       },
                       buttonText: "Okay".translate());
                 } else {
