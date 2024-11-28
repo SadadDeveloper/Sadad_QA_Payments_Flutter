@@ -1,10 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// import 'package:get/get.dart';
-import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 
 class CommonWidgets {
   static Color primaryColor = const Color(0xFFA02058);
@@ -32,7 +28,9 @@ class CommonWidgets {
       padding: const EdgeInsets.only(bottom: 20),
       child: TextFormField(
           focusNode: focusNode,
-          validator: validator ?? (p0) {},
+          validator: validator ?? (p0) {
+            return null;
+          },
 /*
           onSaved: (newValue) {
             print("onSaved::${newValue}");
@@ -62,8 +60,8 @@ class CommonWidgets {
               contentPadding: const EdgeInsets.only(bottom: 3),
 
               prefix: prefix,
-              suffixIcon: suffixIcon ?? SizedBox(),
-              suffixIconConstraints: BoxConstraints.tightFor(),
+              suffixIcon: suffixIcon ?? const SizedBox(),
+              suffixIconConstraints: const BoxConstraints.tightFor(),
               alignLabelWithHint: true,errorStyle: TextStyle( fontSize: useMobileLayout ? 10 : 15),
               labelStyle: TextStyle(
                 fontSize: useMobileLayout ? 12 : 19,
@@ -104,8 +102,8 @@ class CommonWidgets {
             labelStyle: TextStyle(
               color: const Color(0xFF000000).withOpacity(0.5),
             ),
-            suffixIcon: suffixIcon ?? SizedBox(),
-            suffixIconConstraints: BoxConstraints.tightFor(),
+            suffixIcon: suffixIcon ?? const SizedBox(),
+            suffixIconConstraints: const BoxConstraints.tightFor(),
             labelText: labelText,
             border: OutlineInputBorder(
                 borderSide: BorderSide(color: const Color(0xFFDDDDDD).withOpacity(0.3), width: 1.5),

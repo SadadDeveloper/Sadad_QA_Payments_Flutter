@@ -69,13 +69,11 @@ Map<String, String> ar = {
   "Invalid Title": "العنوان غير صالح",
   "Invalid email.": "البريد الإلكتروني غير صالح",
   "Yes, cancel": "إلغاء",
-  "Please enter a valid mobile number.": "الرجاء كتابة رقم جوال صحيح",
   "Please ensure that your mobile number contains between 8 and 16 digits.":
       "يجب أن يتراوح رقم الجوال بين 8 إلى 16 رقماً.",
   "Error": "خطأ",
   "Mobile number should be 8 digits or more.": "يجب أن يتألف رقم الجوال من 8 أرقام أو أكثر.",
   "Invalid amount format": "صيغة المبلغ غير صالحة",
-  "Transaction amount should contains up to 2 decimal points.": "ينبغي أن يتضمن مبلغ المعاملة 2 رقم عشري.",
   "Invalid token": "الرمز غير صحيح",
   "The token you are using is invalid": "انتهت صلاحية الرمز.",
   "You have entered Invalid OTP.": "رمز المرور لمرة واحدة غير صحيح.",
@@ -86,5 +84,4 @@ Map<String, String> ar = {
   "Sorry, Apple pay is not allowed in sandbox." : "عذرًا، خدمة Apple pay غير مسموح بها في وضع الحماية.",
   "Transaction in Progress" : "المعاملة قيد التنفيذ",
   "Are you sure you want to cancel this transaction? Any progress will be lost, and the transaction will not be completed." : "هل أنت متأكد أنك تريد إلغاء هذه المعاملة؟ سيتم فقدان أي تقدم، ولن تكتمل المعاملة.",
-
 };

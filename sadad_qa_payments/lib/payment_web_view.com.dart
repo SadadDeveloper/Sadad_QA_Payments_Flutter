@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 
-import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:sadad_qa_payments/apputils/appdialogs.dart';
@@ -11,12 +8,12 @@ import 'package:sadad_qa_payments/model/webViewDetailsModel.dart';
 import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 import 'package:sadad_qa_payments/services/appservices.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'services/api_endpoint.dart';
+
 
 class PaymentWebViewScreen extends StatefulWidget {
   final WebViewDetailsModel webViewDetailsModel;
 
-  PaymentWebViewScreen({Key? key, required this.webViewDetailsModel}) : super(key: key);
+  const PaymentWebViewScreen({Key? key, required this.webViewDetailsModel}) : super(key: key);
 
   @override
   State<PaymentWebViewScreen> createState() => _PaymentWebViewScreenState();
@@ -50,7 +47,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             backgroundColor: widget.webViewDetailsModel.themeColor,
             leading:  IconButton(
               onPressed: () => onBack(),
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios_new_outlined,
                 color: Colors.white,
               ),
@@ -141,7 +138,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       },
     ));
     webController.setOnConsoleMessage((message) {
-      print(message.message);
+      debugPrint(message.message);
     },);
 
     // webController.addJavaScriptChannel(
@@ -154,7 +151,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     //   },
     // );
 
-    int amount = (widget.webViewDetailsModel.transactionAmount!).toInt();
+    // int amount = (widget.webViewDetailsModel.transactionAmount!).toInt();
     if (widget.webViewDetailsModel.paymentMethod == "credit") {
       if (widget.webViewDetailsModel.isWebContentAvailable == true) {
         String? webViewString = widget.webViewDetailsModel.webContent;
@@ -232,14 +229,14 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       List fullNameArr = widget.webViewDetailsModel.cardHolderName!.split("");
       String firstName = "";
       String lastName = "";
-      if (fullNameArr.length > 0) {
+      if (fullNameArr.isNotEmpty) {
         firstName = fullNameArr[0];
         lastName = fullNameArr.length > 1 ? fullNameArr[1] : "";
       }
       String country = "";
       String emailId = widget.webViewDetailsModel.email ?? "";
       String cellNo = widget.webViewDetailsModel.contactNumber ?? "";
-      String postString = "";
+      // String postString = "";
       String merchantID = widget.webViewDetailsModel.merchantUserId ?? ""; //"9246722"
       String merchantSadadID = widget.webViewDetailsModel.merchantSadadId ?? ""; //"9246722";
       var strProductDetails = jsonEncode(widget.webViewDetailsModel.productDetail);
@@ -249,9 +246,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       String? ipAddress = await NetworkInfo().getWifiIPv6();
       var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
       postString =
-          "isFlutter=1&isLanguage=${lang}&website_ref_no_credit=${widget.webViewDetailsModel.orderID}&hash=${widget.webViewDetailsModel.checksum}&vpc_Version=1&vpc_Command=pay&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${widget.webViewDetailsModel.transactionId}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.webViewDetailsModel.token}";
-      var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-      String encodedString = base64.encode(utf8.encode(temp)).trim();
+          "isFlutter=1&isLanguage=$lang&website_ref_no_credit=${widget.webViewDetailsModel.orderID}&hash=${widget.webViewDetailsModel.checksum}&vpc_Version=1&vpc_Command=pay&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${widget.webViewDetailsModel.transactionId}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.webViewDetailsModel.token}";
+      // var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+      // String encodedString = base64.encode(utf8.encode(temp)).trim();
       // var htmlString = await AppServices.applePayWebviewRequest(encodedString: encodedString);
       // webController.loadHtmlString(htmlString as String);
 

@@ -59,7 +59,7 @@ Sample code to integrate can be found in [example/lib/main.dart](example/lib/mai
 import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 ```
 
-#### Create Razorpay instance
+#### Create instance
 
 ```dart
   InkWell(onTap: () async {

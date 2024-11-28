@@ -237,15 +237,15 @@ class _HomePageState extends State<HomePage> {
       //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
       //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
       //'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
-      //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
+      'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
       //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
-      'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
+      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
     ) : url = Uri.parse(
       //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
       //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
-      //'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
+      'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
       //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
-      'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
+      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
       //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
     );
     //https://sadad.de/sadadSDKTestConfig/index2.php//Preprod Token

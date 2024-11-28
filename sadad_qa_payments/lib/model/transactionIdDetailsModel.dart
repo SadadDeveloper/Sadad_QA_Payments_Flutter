@@ -1,10 +1,7 @@
-// To parse this JSON data, do
-//
-//     final transactionIdDetailsModel = transactionIdDetailsModelFromJson(jsonString);
-
 import 'dart:convert';
 
-TransactionIdDetailsModel transactionIdDetailsModelFromJson(String str) => TransactionIdDetailsModel.fromJson(json.decode(str));
+TransactionIdDetailsModel transactionIdDetailsModelFromJson(String str) =>
+    TransactionIdDetailsModel.fromJson(json.decode(str));
 
 String transactionIdDetailsModelToJson(TransactionIdDetailsModel data) => json.encode(data.toJson());
 
@@ -70,66 +67,74 @@ class TransactionIdDetailsModel {
   int? receiverId;
 
   factory TransactionIdDetailsModel.fromJson(Map<String, dynamic> json) => TransactionIdDetailsModel(
-    invoicenumber: json["invoicenumber"],
-    verificationstatus: json["verificationstatus"],
-    isRefund: json["isRefund"],
-    amount: json["amount"]?.toDouble(),
-    servicecharge: json["servicecharge"]?.toDouble(),
-    servicechargedescription: json["servicechargedescription"] == null ? null : Servicechargedescription.fromJson(json["servicechargedescription"]),
-    transactionSummary: json["transaction_summary"] == null ? null : TransactionSummary.fromJson(json["transaction_summary"]),
-    txnip: json["txnip"],
-    txniptrackervalue: json["txniptrackervalue"],
-    isSuspicious: json["is_suspicious"],
-    isFraud: json["isFraud"],
-    openingBalance: json["opening_balance"],
-    osHistory: json["os_history"] == null ? [] : List<OsHistory>.from(json["os_history"]!.map((x) => OsHistory.fromJson(x))),
-    creditcardpaymentmodeid: json["creditcardpaymentmodeid"],
-    txnBankStatus: json["txn_bank_status"] == null ? [] : List<TxnBankStatus>.from(json["txn_bank_status"]!.map((x) => TxnBankStatus.fromJson(x))),
-    sourceofTxn: json["sourceofTxn"],
-    id: json["id"],
-    transactiondate: json["transactiondate"] == null ? null : DateTime.parse(json["transactiondate"]),
-    deletedAt: json["deletedAt"],
-    created: json["created"] == null ? null : DateTime.parse(json["created"]),
-    modified: json["modified"] == null ? null : DateTime.parse(json["modified"]),
-    transactionentityId: json["transactionentityId"],
-    transactionmodeId: json["transactionmodeId"],
-    transactionstatusId: json["transactionstatusId"],
-    cardschemeid: json["cardschemeid"],
-    hash: json["hash"],
-    sadadId: json["SadadId"],
-    receiverId: json["receiverId"],
-  );
+        invoicenumber: json["invoicenumber"],
+        verificationstatus: json["verificationstatus"],
+        isRefund: json["isRefund"],
+        amount: json["amount"]?.toDouble(),
+        servicecharge: json["servicecharge"]?.toDouble(),
+        servicechargedescription: json["servicechargedescription"] == null
+            ? null
+            : Servicechargedescription.fromJson(json["servicechargedescription"]),
+        transactionSummary:
+            json["transaction_summary"] == null ? null : TransactionSummary.fromJson(json["transaction_summary"]),
+        txnip: json["txnip"],
+        txniptrackervalue: json["txniptrackervalue"],
+        isSuspicious: json["is_suspicious"],
+        isFraud: json["isFraud"],
+        openingBalance: json["opening_balance"],
+        osHistory: json["os_history"] == null
+            ? []
+            : List<OsHistory>.from(json["os_history"]!.map((x) => OsHistory.fromJson(x))),
+        creditcardpaymentmodeid: json["creditcardpaymentmodeid"],
+        txnBankStatus: json["txn_bank_status"] == null
+            ? []
+            : List<TxnBankStatus>.from(json["txn_bank_status"]!.map((x) => TxnBankStatus.fromJson(x))),
+        sourceofTxn: json["sourceofTxn"],
+        id: json["id"],
+        transactiondate: json["transactiondate"] == null ? null : DateTime.parse(json["transactiondate"]),
+        deletedAt: json["deletedAt"],
+        created: json["created"] == null ? null : DateTime.parse(json["created"]),
+        modified: json["modified"] == null ? null : DateTime.parse(json["modified"]),
+        transactionentityId: json["transactionentityId"],
+        transactionmodeId: json["transactionmodeId"],
+        transactionstatusId: json["transactionstatusId"],
+        cardschemeid: json["cardschemeid"],
+        hash: json["hash"],
+        sadadId: json["SadadId"],
+        receiverId: json["receiverId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "invoicenumber": invoicenumber,
-    "verificationstatus": verificationstatus,
-    "isRefund": isRefund,
-    "amount": amount,
-    "servicecharge": servicecharge,
-    "servicechargedescription": servicechargedescription?.toJson(),
-    "transaction_summary": transactionSummary?.toJson(),
-    "txnip": txnip,
-    "txniptrackervalue": txniptrackervalue,
-    "is_suspicious": isSuspicious,
-    "isFraud": isFraud,
-    "opening_balance": openingBalance,
-    "os_history": osHistory == null ? [] : List<dynamic>.from(osHistory!.map((x) => x.toJson())),
-    "creditcardpaymentmodeid": creditcardpaymentmodeid,
-    "txn_bank_status": txnBankStatus == null ? [] : List<dynamic>.from(txnBankStatus!.map((x) => x.toJson())),
-    "sourceofTxn": sourceofTxn,
-    "id": id,
-    "transactiondate": "${transactiondate!.year.toString().padLeft(4, '0')}-${transactiondate!.month.toString().padLeft(2, '0')}-${transactiondate!.day.toString().padLeft(2, '0')}",
-    "deletedAt": deletedAt,
-    "created": created?.toIso8601String(),
-    "modified": modified?.toIso8601String(),
-    "transactionentityId": transactionentityId,
-    "transactionmodeId": transactionmodeId,
-    "transactionstatusId": transactionstatusId,
-    "cardschemeid": cardschemeid,
-    "hash": hash,
-    "SadadId": sadadId,
-    "receiverId": receiverId,
-  };
+        "invoicenumber": invoicenumber,
+        "verificationstatus": verificationstatus,
+        "isRefund": isRefund,
+        "amount": amount,
+        "servicecharge": servicecharge,
+        "servicechargedescription": servicechargedescription?.toJson(),
+        "transaction_summary": transactionSummary?.toJson(),
+        "txnip": txnip,
+        "txniptrackervalue": txniptrackervalue,
+        "is_suspicious": isSuspicious,
+        "isFraud": isFraud,
+        "opening_balance": openingBalance,
+        "os_history": osHistory == null ? [] : List<dynamic>.from(osHistory!.map((x) => x.toJson())),
+        "creditcardpaymentmodeid": creditcardpaymentmodeid,
+        "txn_bank_status": txnBankStatus == null ? [] : List<dynamic>.from(txnBankStatus!.map((x) => x.toJson())),
+        "sourceofTxn": sourceofTxn,
+        "id": id,
+        "transactiondate":
+            "${transactiondate!.year.toString().padLeft(4, '0')}-${transactiondate!.month.toString().padLeft(2, '0')}-${transactiondate!.day.toString().padLeft(2, '0')}",
+        "deletedAt": deletedAt,
+        "created": created?.toIso8601String(),
+        "modified": modified?.toIso8601String(),
+        "transactionentityId": transactionentityId,
+        "transactionmodeId": transactionmodeId,
+        "transactionstatusId": transactionstatusId,
+        "cardschemeid": cardschemeid,
+        "hash": hash,
+        "SadadId": sadadId,
+        "receiverId": receiverId,
+      };
 }
 
 class OsHistory {
@@ -142,14 +147,14 @@ class OsHistory {
   String? os;
 
   factory OsHistory.fromJson(Map<String, dynamic> json) => OsHistory(
-    datetime: json["datetime"] == null ? null : DateTime.parse(json["datetime"]),
-    os: json["os"],
-  );
+        datetime: json["datetime"] == null ? null : DateTime.parse(json["datetime"]),
+        os: json["os"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "datetime": datetime?.toIso8601String(),
-    "os": os,
-  };
+        "datetime": datetime?.toIso8601String(),
+        "os": os,
+      };
 }
 
 class Servicechargedescription {
@@ -168,20 +173,19 @@ class Servicechargedescription {
   double? fixedCommssion;
 
   factory Servicechargedescription.fromJson(Map<String, dynamic> json) => Servicechargedescription(
-    percentage: json["Percentage"]?.toDouble(),
-    percentageAmount: json["PercentageAmount"]?.toDouble(),
-    minCommissionAmount: json["MinCommissionAmount"]?.toDouble(),
-    orderCommission: json["orderCommission"]?.toDouble(),
-    fixedCommssion: json["FixedCommssion"]?.toDouble()
-  );
+      percentage: json["Percentage"]?.toDouble(),
+      percentageAmount: json["PercentageAmount"]?.toDouble(),
+      minCommissionAmount: json["MinCommissionAmount"]?.toDouble(),
+      orderCommission: json["orderCommission"]?.toDouble(),
+      fixedCommssion: json["FixedCommssion"]?.toDouble());
 
   Map<String, dynamic> toJson() => {
-    "Percentage": percentage,
-    "PercentageAmount": percentageAmount,
-    "MinCommissionAmount": minCommissionAmount,
-    "orderCommission": orderCommission,
-    "FixedCommssion": fixedCommssion,
-  };
+        "Percentage": percentage,
+        "PercentageAmount": percentageAmount,
+        "MinCommissionAmount": minCommissionAmount,
+        "orderCommission": orderCommission,
+        "FixedCommssion": fixedCommssion,
+      };
 }
 
 class TransactionSummary {
@@ -196,16 +200,17 @@ class TransactionSummary {
   List<dynamic>? productDetails;
 
   factory TransactionSummary.fromJson(Map<String, dynamic> json) => TransactionSummary(
-    mobileNo: json["MOBILE_NO"],
-    txnAmount: json["TXN_AMOUNT"]?.toDouble(),
-    productDetails: json["PRODUCT_DETAILS"] == null ? [] : List<dynamic>.from(json["PRODUCT_DETAILS"]!.map((x) => x)),
-  );
+        mobileNo: json["MOBILE_NO"],
+        txnAmount: json["TXN_AMOUNT"]?.toDouble(),
+        productDetails:
+            json["PRODUCT_DETAILS"] == null ? [] : List<dynamic>.from(json["PRODUCT_DETAILS"]!.map((x) => x)),
+      );
 
   Map<String, dynamic> toJson() => {
-    "MOBILE_NO": mobileNo,
-    "TXN_AMOUNT": txnAmount,
-    "PRODUCT_DETAILS": productDetails == null ? [] : List<dynamic>.from(productDetails!.map((x) => x)),
-  };
+        "MOBILE_NO": mobileNo,
+        "TXN_AMOUNT": txnAmount,
+        "PRODUCT_DETAILS": productDetails == null ? [] : List<dynamic>.from(productDetails!.map((x) => x)),
+      };
 }
 
 class TxnBankStatus {
@@ -222,16 +227,16 @@ class TxnBankStatus {
   String? message;
 
   factory TxnBankStatus.fromJson(Map<String, dynamic> json) => TxnBankStatus(
-    date: json["Date"] == null ? null : DateTime.parse(json["Date"]),
-    txnId: json["TxnID"],
-    code: json["Code"],
-    message: json["message"],
-  );
+        date: json["Date"] == null ? null : DateTime.parse(json["Date"]),
+        txnId: json["TxnID"],
+        code: json["Code"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "Date": date?.toIso8601String(),
-    "TxnID": txnId,
-    "Code": code,
-    "message": message,
-  };
+        "Date": date?.toIso8601String(),
+        "TxnID": txnId,
+        "Code": code,
+        "message": message,
+      };
 }

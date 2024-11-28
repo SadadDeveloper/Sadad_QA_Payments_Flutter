@@ -1,12 +1,4 @@
-import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-import 'package:sadad_qa_payments/apputils/appassets.dart';
-import 'package:sadad_qa_payments/model/creditcardsettingsmodel.dart';
-import 'package:sadad_qa_payments/model/sendOtpModel.dart';
-import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 
 class MainPageController {
 

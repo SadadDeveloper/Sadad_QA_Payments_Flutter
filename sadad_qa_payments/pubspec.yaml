@@ -1,23 +1,21 @@
 name: sadad_qa_payments
 description: Implement sadad payment sdk ..
-version: 0.0.01
-homepage: https://github.com/SadadDeveloper/Sadad_QA_Payments_Flutter
+version: 1.0.0
+homepage: https://github.com/SadadDeveloper/Sadad_QA_Payments_Flutter.git
 
 environment:
-  sdk: '>=2.19.6 <4.0.0'
+  sdk: ">=3.1.5 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-#  get: ^4.6.5
   http: ^0.13.6
   webview_flutter: ^4.8.0
   cryptlib_2_0: ^0.0.3
   network_info_plus: ^4.1.0
-#  sms_autofill: ^2.4.0
   pay: ^1.1.2
-  pinput: "3.0.1"
+  pinput: ^3.0.1
 
 dev_dependencies:
   flutter_test:

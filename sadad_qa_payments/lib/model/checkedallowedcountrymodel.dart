@@ -10,9 +10,9 @@ class CheckedAllowedCountryModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isAllowed'] = this.isAllowed;
-    data['isDebitCard'] = this.isDebitCard;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['isAllowed'] = isAllowed;
+    data['isDebitCard'] = isDebitCard;
     return data;
   }
 }
