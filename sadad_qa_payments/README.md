@@ -31,8 +31,7 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 
 ![googleSS3.png](/assets/googleSS3.png)
 
-- While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in <parameter_name>
-  This  <parameter_name>  should be actual key name to which merchant needs to pass his GPay merchant Id.
+- While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in googleMerchantID . Example mentioned below.
 
 ## Installation
 
