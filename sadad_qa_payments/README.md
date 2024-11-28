@@ -167,7 +167,9 @@ Example 1 :
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 1:
-![SDKScreenShot.png](/assets/SDKScreenShot.png)
+
+![SDKScreenShot](https://github.com/user-attachments/assets/747fe68f-5fea-4d78-849a-e203712139d6)
+
 
 Example 2 :
 
@@ -193,5 +195,6 @@ Example 2 :
 ```
 Output 2:
 
-![SDKScreenShot.png](/assets/SDKScreenShot2.png)
+![SDKScreenShot2](https://github.com/user-attachments/assets/aaf77bd6-2a47-4028-a031-d873f7ad2d69)
+
 
