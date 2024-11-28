@@ -163,7 +163,7 @@ Example 1 :
                           paymentButtonColor: Colors.black,
                           paymentButtonTextColor: Colors.white,
                           themeColor: Colors.green,
-                          googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                          googleMerchantID: 'BCR2D453R6Y72312',
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 1:
@@ -188,7 +188,7 @@ Example 2 :
                           paymentButtonColor: Colors.red,
                           paymentButtonTextColor: Colors.white,
                           themeColor: Colors.brown
-                          googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
+                          googleMerchantID: 'BCR2D453R6Y72312',
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 2:
