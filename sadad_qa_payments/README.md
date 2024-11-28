@@ -125,7 +125,8 @@ Here is the parameter type and description to pass.
 | paymentButtonColor  | Color                 | Pass Color for Pay button background color.                                                  |
 | paymentButtonTextColor    | Color                 | Pass Color for Pay button text color.                                                        |
 | themeColor  | Color                 | Pass color for set theme color of overall Payment gateway.                                   |
-
+| googleMerchantID  | String                 | Pass "123456789" For Sandbox Mode and Production Mode read Prerequisites For Google Pay.     |
+| googleMerchantName  | String                 | Pass "Merchant_Name" For Sandbox Mode and Production Mode read Prerequisites For Google Pay. |
 
 ### Payment Completion response
 
