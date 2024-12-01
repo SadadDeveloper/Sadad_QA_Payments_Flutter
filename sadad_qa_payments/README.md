@@ -49,6 +49,28 @@ sadad_qa_payments: ^0.0.37
 
 Run `flutter packages get` in the root directory of your app.
 
+## Generate Token
+Sandbox: curl --location 'https://api.sadadqatar.com/api-v5/userbusinesses/getsdktoken' \
+--header 'Content-Type: application/json' \
+--data '{
+                        "sadadId": "SADAD_ID",
+                        "secretKey": "TEST_KEY",
+                        "domain": "TEST_KEY_DOMAIN",
+                        "isTest": true
+                    }'
+
+Production: curl --location 'https://api.sadadqatar.com/api-v4/userbusinesses/getsdktoken' \
+--header 'Content-Type: application/json' \
+--data '{
+                        "sadadId": "SADAD_ID",
+                        "secretKey": "LIVE_KEY",
+                        "domain": "LIVE_KEY_DOMAIN"
+                    }'
+
+Sample Response: {
+    "accessToken": "tWAJFMkO7y9epepUsf2s8mc6DtnXO24vnJoTcQQaNoRkoWg8xCqPXtcnH7WwQxNL"
+}
+
 ## Usage
 
 Sample code to integrate can be found in [example/lib/main.dart](example/lib/main.dart).
