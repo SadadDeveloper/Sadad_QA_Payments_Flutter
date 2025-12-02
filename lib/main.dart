@@ -19,29 +19,29 @@ class MyApp extends StatefulWidget {
 List<ProductDetail> productList = [
   ProductDetail(
       name: "Mobile Phgfgone",
-      price: 150.154,
+      price: 10.45,
       imageUrl:
           "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       quantity: 0),
   ProductDetail(
       name: "Headphone",
-      price: 200.546,
+      price: 5.3,
       imageUrl:
           "https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       quantity: 0),
   ProductDetail(
       name: "Cars",
-      price: 148,
+      price: 18.56456,
       imageUrl: "https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg?auto=compress&cs=tinysrgb&w=800",
       quantity: 0),
   ProductDetail(
       name: "Bike",
-      price: 260,
+      price: 10,
       imageUrl: "https://images.pexels.com/photos/2393835/pexels-photo-2393835.jpeg?auto=compress&cs=tinysrgb&w=800",
       quantity: 0),
   ProductDetail(
       name: "Cycle",
-      price: 987,
+      price: 5,
       imageUrl:
           "https://images.pexels.com/photos/38296/cycling-bicycle-riding-sport-38296.jpeg?auto=compress&cs=tinysrgb&w=800",
       quantity: 0),
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
           ? const SizedBox()
           : InkWell(
               onTap: () async {
-                String? token = await getAccessToken();
+                String? token = await GenerateToken();
                 if (token != null) {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
@@ -234,24 +234,24 @@ class _HomePageState extends State<HomePage> {
     });
     final url;
     _isSwitchOn ? url = Uri.parse(
-      //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
       //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
       //'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
-      //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
+      'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
       //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
-      'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
+      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
     ) : url = Uri.parse(
       //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
       //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
-      //'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
+      'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
       //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
-      'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
+      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
       //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
     );
     //https://sadad.de/sadadSDKTestConfig/index2.php//Preprod Token
     //https://sadad.de/sadadSDKTestConfig/index.php//dev
     //'https://sadadpay.com/sdk_access_token_dev.php'
     Map<String, String> header = {'Content-Type': 'application/json'};
+
     var result = await http.post(
       url,
       headers: header,
@@ -267,6 +267,54 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isApiCalling = false;
     });
+  }
+
+  Future<String?> LoginAPI() async {
+    final  url = Uri.parse(
+      'https://aks-api.sadadqatar.com/api-v5/users/login',//Preprod Sandbox mode
+    );
+    final body =  json.encode({
+      "cellnumber": "55360065",
+      "password": "QAble@2020",
+    });
+    Map<String, String> header = {'Content-Type': 'application/json'};
+    var result = await http.post(
+        url,
+        headers: header, body: body
+    );
+    print(result.body);
+    if (result.statusCode == 200) {
+      var token = jsonDecode(result.body);
+      setState(() {
+        isApiCalling = false;
+      });
+      return token['id'];
+    }
+  }
+  Future<String?> GenerateToken() async {
+    String? token = await LoginAPI();
+    final  url = Uri.parse(
+      'https://aks-api.sadadqatar.com/api-v5/userbusinesses/getsdktoken',//Preprod Sandbox mode
+    );
+    final body =  json.encode({
+      "sadadId": "5294699",
+      "secretKey": _isSwitchOn ? "iFBO/MLXA/sqM/vS" : "un+X0bdFj6JzlCU+",
+      "domain": _isSwitchOn ? "sadad3.xee" : "sadad3.xee",
+      "isTest": _isSwitchOn ? 1 : 0,
+    });
+    Map<String, String> header = {'Content-Type': 'application/json', 'Authorization': '$token'};
+    var result = await http.post(
+        url,
+        headers: header, body: body
+    );
+    print(result.body);
+    if (result.statusCode == 200) {
+      var token = jsonDecode(result.body);
+      setState(() {
+        isApiCalling = false;
+      });
+      return token['accessToken'];
+    }
   }
 
   double total() {

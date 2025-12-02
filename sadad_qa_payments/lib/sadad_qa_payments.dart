@@ -143,9 +143,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         creditCardHolderForm.currentState!.validate();
       }
     });
-
     widget.amount = roundOffToXDecimal(widget.amount, numberOfDecimal: 2);
-
     creditCardSettingsAndValidation(token: widget.token);
     sadadPayPasswordController.clear();
     cardHolderNameController.clear();
@@ -2108,7 +2106,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                             final size = (min(constraints.maxWidth, 275) - 30) / 6;
 
-                            return   Pinput(
+                            return Pinput(
                               // validator: (s) {
                               //   debugPrint("S ::$s");
                               //   return ((s ?? '').length < 6) ? null : 'Pin is incorrect';

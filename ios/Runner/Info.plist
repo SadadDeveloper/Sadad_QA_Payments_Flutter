@@ -49,5 +49,7 @@
 	<string>We are using your location for check from where payment is happening.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We are using your location for check from where payment is happening.</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>

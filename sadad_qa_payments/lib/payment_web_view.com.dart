@@ -134,7 +134,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         });
       },
       onWebResourceError: (WebResourceError error) {
-
+          print(error);
       },
     ));
     webController.setOnConsoleMessage((message) {

@@ -1,6 +1,6 @@
 name: sadad_qa_payments
-description: Implement sadad payment sdk ..
-version: 1.0.0
+description: Implement sadad qa payment sdk ..
+version: 1.0.3
 homepage: https://github.com/SadadDeveloper/Sadad_QA_Payments_Flutter.git
 
 environment:
@@ -10,17 +10,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.6
-  webview_flutter: ^4.8.0
+  http: ^1.5.0
+  webview_flutter: ^4.13.0
   cryptlib_2_0: ^0.0.3
-  network_info_plus: ^4.1.0
-  pay: ^1.1.2
-  pinput: ^3.0.1
+  network_info_plus: ^7.0.0
+  pay: ^3.2.1
+  pinput: ^5.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

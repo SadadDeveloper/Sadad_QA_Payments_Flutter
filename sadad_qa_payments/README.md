@@ -40,7 +40,7 @@ This plugin is available on Pub: [https://pub.dev/packages/sadad_qa_payments](ht
 Add this to `dependencies` in your app's `pubspec.yaml`
 
 ```yaml
-sadad_qa_payments: ^0.0.37
+sadad_qa_payments: ^1.0.2
 ```
 
 **Note for Android**: Make sure that the minimum API level for your app is 21 or higher.
