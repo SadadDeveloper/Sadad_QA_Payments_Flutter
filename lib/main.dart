@@ -4,6 +4,8 @@ import 'package:demo_sadad/sucess.dart';
 import 'package:flutter/material.dart';
 import 'package:sadad_qa_payments/sadad_qa_payments.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +58,7 @@ List<ProductDetail> productList = [
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: AddToCart());
+    return const MaterialApp(home: SadadLoginPage());
   }
 }
 
@@ -71,21 +73,40 @@ class _HomePageState extends State<HomePage> {
   bool isApiCalling = false;
   String response = "";
   bool _isSwitchOn = false;
-  String env = "production";
+  bool _isServerSwitchOn = false;
+
+  String env = "Live";
+  String server = "Preprod";
+
+  Map<String, dynamic>? receivedData;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    receivedData =
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+  }
 
   void _toggleSwitch(bool value) {
     setState(() {
       _isSwitchOn = value;
-      env = _isSwitchOn ? "sandbox" : "production";
+      env = _isSwitchOn ? "Sandbox" : "Live";
     });
   }
 
+  void _servertoggleSwitch(bool value) {
+    setState(() {
+      _isServerSwitchOn = value;
+      server = _isSwitchOn ? "Preprod" : "Production";
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Cart",
+          "Sadad Internal",
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -102,16 +123,16 @@ class _HomePageState extends State<HomePage> {
                         productDetail: [
                           {"test": "jhjkkk", "test2": "dfdsf"}
                         ],
-                        customerName: "demo",
-                        amount: 13.5,
-                        email: "demo@gmail.com",
-                        mobile: "98989898",
+                        customerName: "Sadad Internal",
+                        amount: total(),
+                        email: receivedData!["email"],
+                        mobile: receivedData!["mobile"],
                         token: token,
                         packageMode: _isSwitchOn ? PackageMode.debug : PackageMode.release,
                         isWalletEnabled: true,
                         paymentTypes: [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay],
-                        image: Image.asset("assets/sample-Logo.jpg"),
-                        titleText: "Lorem Ipsum",
+                        image: Image.asset("assets/sadad-logo.png"),
+                        titleText: "Sadad Demo",
                         paymentButtonColor: Colors.black,
                         paymentButtonTextColor: Colors.white,
                         themeColor: Colors.green,
@@ -145,164 +166,178 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
+                      Column(
                         children: [
-                          Switch(
-                            value: _isSwitchOn,
-                            onChanged: _toggleSwitch,
+                          /// Environment Switch
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.grey.shade300),
+                              color: Colors.grey.shade50,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      "Environment",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _isSwitchOn ? "Sandbox" : "Live",
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Transform.scale(
+                                  scale: 0.9,
+                                  child: Switch(
+                                    activeColor: Colors.green,
+                                    value: _isSwitchOn,
+                                    onChanged: _toggleSwitch,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(width: 20),
-                          Text(
-                            env,
-                            style: TextStyle(fontSize: 24),
+                          /// Server Switch
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.grey.shade300),
+                              color: Colors.grey.shade50,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      "Server",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _isServerSwitchOn ? "Pre-Production" : "Production",
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Transform.scale(
+                                  scale: 0.9,
+                                  child: Switch(
+                                    activeColor: Colors.green,
+                                    value: _isServerSwitchOn,
+                                    onChanged: _servertoggleSwitch,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 8),
                       Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: productList.length,
-                        itemBuilder: (context, index) => _ProductTile(
-                          isAddToCart: false,
-                          productDetail: productList[index],
-                          onRemove: () {
-                            setState(() {
-                              if (productList[index].quantity > 0) {
-                                productList[index].quantity = --productList[index].quantity;
-                              }
-                            });
-                          },
-                          onAdd: () {
-                            setState(() {
-                              productList[index].quantity = ++productList[index].quantity;
-                            });
-                          },
-                        ),
-                      )),
-                      // ElevatedButton(
-                      //     onPressed: () async {
-                      //       String? token = await getAccessToken();
-                      //       if (token != null) {
-                      //         Navigator.push(context, MaterialPageRoute(
-                      //           builder: (context) {
-                      //             return PaymentScreen(
-                      //                 productDetail: [],
-                      //                 customerName: "demo",
-                      //                 amount: 100.45,
-                      //                 email: "demo@gmail.com",
-                      //                 mobile: "9898989898",
-                      //                 image: Image.asset("assets/meera.jpg"),
-                      //                 titleText: "AL Meera Hyper Market",
-                      //                 token: token,
-                      //                 packageMode: PackageMode.debug,
-                      //                 paymentTypes: [
-                      //                   PaymentType.creditCard,
-                      //                   PaymentType.wallet,
-                      //                   PaymentType.debitCard,
-                      //                   PaymentType.sadadPay
-                      //                 ],
-                      //                 paymentButtonColor: const Color(0xFF8D913C),
-                      //                 paymentButtonTextColor: Colors.white,
-                      //                 themeColor: const Color(0xFF8D993C));
-                      //           },
-                      //         )).then((value) {
-                      //           setState(() {
-                      //             response = value.toString().replaceAll(",", "\n");
-                      //           });
-                      //           print("back value :: ${value}");
-                      //         });
-                      //       }
-                      //     },
-                      //     child: const Text("Go to paymentscreen")),
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            Center(child: Text(response.toString())),
-                          ],
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: productList.length,
+                            itemBuilder: (context, index) => _ProductTile(
+                              isAddToCart: false,
+                              productDetail: productList[index],
+                              onRemove: () {
+                                setState(() {
+                                  if (productList[index].quantity > 0) {
+                                    productList[index].quantity =
+                                    --productList[index].quantity;
+                                  }
+                                });
+                              },
+                              onAdd: () {
+                                setState(() {
+                                  productList[index].quantity =
+                                  ++productList[index].quantity;
+                                });
+                              },
+                            ),
+                          ),
                         ),
                       ),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: ListView(
+                            children: [
+                              Center(
+                                child: Text(response.toString() == "" ? "Transaction Response will Come here." : response.toString()),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   )),
       ),
     );
   }
 
-  Future<String?> getAccessToken() async {
-    setState(() {
-      isApiCalling = true;
-    });
-    final url;
-    _isSwitchOn ? url = Uri.parse(
-      //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
-      //'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
-      'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
-      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
-      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
-    ) : url = Uri.parse(
-      //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
-      //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
-      'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
-      //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
-      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
-      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
-    );
-    //https://sadad.de/sadadSDKTestConfig/index2.php//Preprod Token
-    //https://sadad.de/sadadSDKTestConfig/index.php//dev
-    //'https://sadadpay.com/sdk_access_token_dev.php'
-    Map<String, String> header = {'Content-Type': 'application/json'};
 
-    var result = await http.post(
-      url,
-      headers: header,
-    );
-    print(result.body);
-    if (result.statusCode == 200) {
-      var token = jsonDecode(result.body);
-      setState(() {
-        isApiCalling = false;
-      });
-      return token['accessToken'];
-    }
-    setState(() {
-      isApiCalling = false;
-    });
-  }
-
-  Future<String?> LoginAPI() async {
-    final  url = Uri.parse(
-      'https://aks-api.sadadqatar.com/api-v5/users/login',//Preprod Sandbox mode
-    );
-    final body =  json.encode({
-      "cellnumber": "55360065",
-      "password": "QAble@2020",
-    });
-    Map<String, String> header = {'Content-Type': 'application/json'};
-    var result = await http.post(
-        url,
-        headers: header, body: body
-    );
-    print(result.body);
-    if (result.statusCode == 200) {
-      var token = jsonDecode(result.body);
-      setState(() {
-        isApiCalling = false;
-      });
-      return token['id'];
-    }
-  }
   Future<String?> GenerateToken() async {
-    String? token = await LoginAPI();
+    response = "Transaction Response will Come here.";
+    setState(() {
+
+    });
+    //String? token = await LoginAPI();
     final  url = Uri.parse(
-      'https://aks-api.sadadqatar.com/api-v5/userbusinesses/getsdktoken',//Preprod Sandbox mode
+      _isServerSwitchOn ? 'https://aks-api.sadadqatar.com/api-v5/userbusinesses/getsdktoken' : 'https://api.sadadqatar.com/api-v5/userbusinesses/getsdktoken',//Prod
     );
-    final body =  json.encode({
-      "sadadId": "5294699",
-      "secretKey": _isSwitchOn ? "iFBO/MLXA/sqM/vS" : "un+X0bdFj6JzlCU+",
-      "domain": _isSwitchOn ? "sadad3.xee" : "sadad3.xee",
+    final body = json.encode({
+      "sadadId": receivedData!["sadadId"],
+
+      "secretKey": _isSwitchOn
+          ? receivedData!["sandboxsecretKey"]
+          : receivedData!["livesecretKey"],
+
+      "domain": _isSwitchOn
+          ? receivedData!["sandboxdomain"]
+          : receivedData!["livedomain"],
+
       "isTest": _isSwitchOn ? 1 : 0,
     });
-    Map<String, String> header = {'Content-Type': 'application/json', 'Authorization': '$token'};
+    Map<String, String> header = {'Content-Type': 'application/json'};
     var result = await http.post(
         url,
         headers: header, body: body
@@ -314,6 +349,11 @@ class _HomePageState extends State<HomePage> {
         isApiCalling = false;
       });
       return token['accessToken'];
+    } else {
+      response = "Invalid credentials !";
+      setState(() {
+        isApiCalling = false;
+      });
     }
   }
 
@@ -415,103 +455,325 @@ class ProductDetail {
   });
 }
 
-class AddToCart extends StatefulWidget {
-  const AddToCart({super.key});
+// class AddToCart extends StatefulWidget {
+//   const AddToCart({super.key});
+//
+//   @override
+//   State<AddToCart> createState() => _AddToCartState();
+// }
+//
+// class _AddToCartState extends State<AddToCart> {
+//
+//   Map<String, dynamic>? receivedData;
+//
+//   @override
+//   void didChangeDependencies() {
+//     super.didChangeDependencies();
+//
+//     receivedData =
+//     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+//   }
+//
+//   bool isApiCalling = false;
+//   String response = "";
+//   bool _isSwitchOn = false;
+//   String env = "production";
+//
+//   Future<String?> getAccessToken() async {
+//     setState(() {
+//       isApiCalling = true;
+//     });
+//     final url = Uri.parse(
+//       //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
+//       //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
+//       'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
+//       //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
+//       //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
+//       //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
+//     );
+//     //https://sadad.de/sadadSDKTestConfig/index2.php//Preprod Token
+//     //https://sadad.de/sadadSDKTestConfig/index.php//dev
+//     //'https://sadadpay.com/sdk_access_token_dev.php'
+//     Map<String, String> header = {'Content-Type': 'application/json'};
+//     var result = await http.post(
+//       url,
+//       headers: header,
+//     );
+//     print(result.body);
+//     if (result.statusCode == 200) {
+//       var token = jsonDecode(result.body);
+//       setState(() {
+//         isApiCalling = false;
+//       });
+//       return token['accessToken'];
+//     }
+//     setState(() {
+//       isApiCalling = false;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text(
+//           "Products",
+//           style: TextStyle(color: Colors.black),
+//         ),
+//       ),
+//       bottomNavigationBar: isApiCalling
+//           ? const SizedBox()
+//           : InkWell(
+//         onTap: () async {
+//          Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomePage()));
+//         },
+//         child: Container(
+//           height: 50,
+//           child: Center(
+//               child: Text(
+//                 "Go To Cart",
+//                 style: TextStyle(color: Colors.white),
+//               )),
+//           margin: EdgeInsets.all(10),
+//           decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(10)),
+//         ),
+//       ),
+//       body: SafeArea(
+//         child: isApiCalling
+//             ? const CircularProgressIndicator()
+//             : ListView.builder(
+//               padding: EdgeInsets.zero,
+//                                     shrinkWrap: false,
+//                                     physics: const AlwaysScrollableScrollPhysics(),
+//                                     itemCount: productList.length,
+//                                     itemBuilder: (context, index) => _ProductTile(
+//             isAddToCart: true,
+//             productDetail: productList[index],
+//             onRemove: () {
+//               setState(() {
+//                 if (productList[index].quantity > 0) {
+//                   productList[index].quantity = --productList[index].quantity;
+//                 }
+//               });
+//             },
+//             onAdd: () {
+//               setState(() {
+//                 productList[index].quantity = ++productList[index].quantity;
+//               });
+//             },
+//                                     ),
+//                                   ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+class SadadLoginPage extends StatefulWidget {
+  const SadadLoginPage({Key? key}) : super(key: key);
 
   @override
-  State<AddToCart> createState() => _AddToCartState();
+  State<SadadLoginPage> createState() => _SadadLoginPageState();
 }
 
-class _AddToCartState extends State<AddToCart> {
-  bool isApiCalling = false;
-  String response = "";
-  bool _isSwitchOn = false;
-  String env = "production";
+class _SadadLoginPageState extends State<SadadLoginPage> {
+  final _formKey = GlobalKey<FormState>();
 
-  Future<String?> getAccessToken() async {
-    setState(() {
-      isApiCalling = true;
-    });
-    final url = Uri.parse(
-      //'https://sadad.de/sadadSDKTestConfig/index.php',// Dev Server Live Mode
-      //'https://sadad.de/sadadSDKTestConfig/sandbox_index.php', //Dev Server Sandbox mode
-      'https://sadad.de/sadadSDKTestConfig/index2.php', //Preprod Live Mode
-      //'https://sadad.de/sadadSDKTestConfig/preprod_sandbox_index2.php',//Preprod Sandbox mode
-      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/index.php',//Production Server Live
-      //'https://sadad.de/sadadSDKLiveConfig/sadadSDKLiveConfig/sandbox_index.php',
-    );
-    //https://sadad.de/sadadSDKTestConfig/index2.php//Preprod Token
-    //https://sadad.de/sadadSDKTestConfig/index.php//dev
-    //'https://sadadpay.com/sdk_access_token_dev.php'
-    Map<String, String> header = {'Content-Type': 'application/json'};
-    var result = await http.post(
-      url,
-      headers: header,
-    );
-    print(result.body);
-    if (result.statusCode == 200) {
-      var token = jsonDecode(result.body);
-      setState(() {
-        isApiCalling = false;
-      });
-      return token['accessToken'];
-    }
-    setState(() {
-      isApiCalling = false;
-    });
+  final TextEditingController sadadIdController = TextEditingController();
+  final TextEditingController sandBoxsecretKeyController = TextEditingController();
+  final TextEditingController sandBoxdomainController = TextEditingController();
+  final TextEditingController livesecretKeyController = TextEditingController();
+  final TextEditingController livedomainController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileNoController = TextEditingController();
+
+  String environment = "Sandbox";
+
+  @override
+  void initState() {
+    super.initState();
+    loadSavedData();
+  }
+
+  /// Load saved values
+  Future<void> loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    sadadIdController.text = prefs.getString("sadadId") ?? "";
+    sandBoxsecretKeyController.text = prefs.getString("sandboxsecretKey") ?? "";
+    sandBoxdomainController.text = prefs.getString("sandboxdomain") ?? "";
+    livesecretKeyController.text = prefs.getString("livesecretKey") ?? "";
+    livedomainController.text = prefs.getString("livedomain") ?? "";
+    emailController.text = prefs.getString("email") ?? "";
+    mobileNoController.text = prefs.getString("mobile") ?? "";
+  }
+
+  /// Save values
+  Future<void> saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString("sadadId", sadadIdController.text);
+    await prefs.setString("sandboxsecretKey", sandBoxsecretKeyController.text);
+    await prefs.setString("sandboxdomain", sandBoxdomainController.text);
+    await prefs.setString("livesecretKey", livesecretKeyController.text);
+    await prefs.setString("livedomain", livedomainController.text);
+    await prefs.setString("email", emailController.text);
+    await prefs.setString("mobile", mobileNoController.text);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Products",
-          style: TextStyle(color: Colors.black),
+          title: const Text(
+            "Sadad Payment Solution",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF8B0000),
+            ),
+          )),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+
+              TextFormField(
+                controller: sadadIdController,
+                decoration: const InputDecoration(
+                  labelText: "Sadad ID",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Sadad ID" : null,
+              ),
+
+              const SizedBox(height: 24),
+
+              TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Email" : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: mobileNoController,
+                decoration: const InputDecoration(
+                  labelText: "Mobile No.",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Mobile No." : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              const Text(
+                "Sandbox",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: sandBoxsecretKeyController,
+                decoration: const InputDecoration(
+                  labelText: "Secret Key",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Secret Key" : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: sandBoxdomainController,
+                decoration: const InputDecoration(
+                  labelText: "Domain",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Domain" : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              const Text(
+                "Live",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: livesecretKeyController,
+                decoration: const InputDecoration(
+                  labelText: "Secret Key",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Secret Key" : null,
+              ),
+
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: livedomainController,
+                decoration: const InputDecoration(
+                  labelText: "Domain",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value!.isEmpty ? "Enter Domain" : null,
+              ),
+
+              const SizedBox(height: 24),
+
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                ),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+
+                    /// Save data
+                    await saveData();
+
+                    Map<String, dynamic> data = {
+                      "environment": environment,
+                      "sadadId": sadadIdController.text,
+                      "sandboxsecretKey": sandBoxsecretKeyController.text,
+                      "sandboxdomain": sandBoxdomainController.text,
+                      "livesecretKey": livesecretKeyController.text,
+                      "livedomain": livedomainController.text,
+                      "email": emailController.text,
+                      "mobile": mobileNoController.text,
+                    };
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const HomePage(),
+                        settings: RouteSettings(arguments: data),
+                      ),
+                    );
+                    print(data);
+                  }
+                },
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: isApiCalling
-          ? const SizedBox()
-          : InkWell(
-        onTap: () async {
-         Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomePage()));
-        },
-        child: Container(
-          height: 50,
-          child: Center(
-              child: Text(
-                "Go To Cart",
-                style: TextStyle(color: Colors.white),
-              )),
-          margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(10)),
-        ),
-      ),
-      body: SafeArea(
-        child: isApiCalling
-            ? const CircularProgressIndicator()
-            : ListView.builder(
-              padding: EdgeInsets.zero,
-                                    shrinkWrap: false,
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    itemCount: productList.length,
-                                    itemBuilder: (context, index) => _ProductTile(
-            isAddToCart: true,
-            productDetail: productList[index],
-            onRemove: () {
-              setState(() {
-                if (productList[index].quantity > 0) {
-                  productList[index].quantity = --productList[index].quantity;
-                }
-              });
-            },
-            onAdd: () {
-              setState(() {
-                productList[index].quantity = ++productList[index].quantity;
-              });
-            },
-                                    ),
-                                  ),
       ),
     );
   }

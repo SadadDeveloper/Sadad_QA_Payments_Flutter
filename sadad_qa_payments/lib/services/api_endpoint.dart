@@ -4,7 +4,7 @@ bool isDebug = false;
 class ApiEndPoint {
 
 
-  ///////// Python API Production ///////////
+  /////// Python API Production ///////////
   // static const settingAPI = "https://apiv6.sadadqatar.com/api-v6/SDKPayment/settings";
   // static const creditCardPayment = "https://apiv6.sadadqatar.com/api-v6/SDKPayment/creditcard";
   // static const debitCardPayment = "https://apiv6.sadadqatar.com/api-v6/SDKPayment/debitcard";

@@ -140,6 +140,7 @@ class AppServices {
       "txnAmount": encodedString["txnAmount"].toString(),
       "productDetail": encodedString["productDetail"],
       "lang": encodedString["lang"],
+      "email" : encodedString["email"],
       "issandboxmode" : encodedString["issandboxmode"],
       "mobileos" : encodedString["mobileos"],
     });

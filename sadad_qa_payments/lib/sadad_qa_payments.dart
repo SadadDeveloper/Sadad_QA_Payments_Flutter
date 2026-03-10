@@ -1612,6 +1612,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       "productDetail" : widget.productDetail,
       "lang": '${lang}',
       "mobileos" : '${mobileos}',
+      "email" : '${widget.email}',
     };
     Map? response = await AppServices.debitCardPayment(encodedString: body);
     Navigator.pop(context);
