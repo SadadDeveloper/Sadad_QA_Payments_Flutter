@@ -5,11 +5,9 @@ import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sadad_qa_payments/apputils/appstrings.dart';
-import 'package:sadad_qa_payments/model/checkedallowedcountrymodel.dart';
 import 'package:sadad_qa_payments/model/creditcardsettingsmodel.dart';
 import 'package:sadad_qa_payments/model/sadadpayminimumamountcheckmodel.dart';
 import 'package:sadad_qa_payments/model/sendOtpModel.dart';
-import 'package:sadad_qa_payments/model/transactionIdDetailsModel.dart';
 import 'package:sadad_qa_payments/model/usermetapreference.dart';
 import 'package:sadad_qa_payments/services/api_endpoint.dart';
 
@@ -47,7 +45,6 @@ class AppServices {
         final errorResponse = ErrorResponse.fromJson(json.decode(response.body));
         // Extract the error message
         final errorMessage = errorResponse.error.message;
-        print('Error Message: $errorMessage');
 
         // Return the error details as a map
         return {
@@ -154,7 +151,6 @@ class AppServices {
       final errorResponse = ErrorResponse.fromJson(json.decode(result.body));
       // Extract the error message
       final errorMessage = errorResponse.error.message;
-      print('Error Message: $errorMessage');
 
       // Return the error details as a map
       return {
@@ -208,7 +204,6 @@ class AppServices {
         final errorResponse = ErrorResponse.fromJson(json.decode(result.body));
         // Extract the error message
         final errorMessage = errorResponse.error.message;
-        print('Error Message: $errorMessage');
 
         // Return the error details as a map
         return {
@@ -222,7 +217,7 @@ class AppServices {
   }
   static Future googlePayment({
     required String encrypt_string}) async {
-    final url = Uri.parse("${ApiEndPoint.googlePay}");
+    final url = Uri.parse(ApiEndPoint.googlePay);
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -245,7 +240,6 @@ class AppServices {
         final errorResponse = ErrorResponse.fromJson(json.decode(result.body));
         // Extract the error message
         final errorMessage = errorResponse.error.message;
-        print('Error Message: $errorMessage');
 
         // Return the error details as a map
         return {
@@ -278,6 +272,27 @@ class AppServices {
     }
     return null;
   }
+
+  // static Future<Map<String, dynamic>?> googlePayGetConstant({required String sadadId, required String token, required String issandboxmode}) async {
+  //     final url = Uri.parse(
+  //       ApiEndPoint.googlePayGetConstant,
+  //     );
+  //     Map<String, String> header = {'Content-Type': 'application/json'};
+  //     Map<String, dynamic> body = {"sadadId": int.parse(sadadId),"token" : token,"issandboxmode" : issandboxmode};
+  //
+  //     var result = await http.post(
+  //       url,
+  //       headers: header,
+  //       body: json.encode(body),
+  //     );
+  //
+  //     if (result.statusCode == 200) {
+  //       var response = jsonDecode(result.body);
+  //       return response;
+  //     }
+  //     return null;
+  // }
+
   static Future<Map?> sadadPayTransactionV6(
       {required String ipAddress,
         required List productDetails,
@@ -318,7 +333,6 @@ class AppServices {
 
       // Extract the error message
       final errorMessage = errorResponse.error.message;
-      print('Error Message: $errorMessage');
 
       // Return the error details as a map
       return {

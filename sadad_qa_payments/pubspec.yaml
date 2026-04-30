@@ -1,11 +1,11 @@
 name: sadad_qa_payments
 description: Implement sadad qa payment sdk ..
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/SadadDeveloper/Sadad_QA_Payments_Flutter.git
 
 environment:
   sdk: ">=3.1.5 <4.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=3.10.0"
 
 dependencies:
   flutter:
