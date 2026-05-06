@@ -105,6 +105,7 @@ import 'package:sadad_qa_payments/sadad_qa_payments.dart';
                         paymentButtonColor: Colors.black,
                         paymentButtonTextColor: Colors.white,
                         themeColor: Colors.green,
+                        merchantSadadId: 'YOUR_SADAD_ID',
                         googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
                         googleMerchantName: 'Sadad Payment Solutions');
                     },
@@ -147,6 +148,7 @@ Here is the parameter type and description to pass.
 | paymentButtonColor  | Color                 | Pass Color for Pay button background color.                                                  |
 | paymentButtonTextColor    | Color                 | Pass Color for Pay button text color.                                                        |
 | themeColor  | Color                 | Pass color for set theme color of overall Payment gateway.                                   |
+| merchantSadadId  | String                 | Pass your Sadad ID provided by Sadad.                                                        |
 | googleMerchantID  | String                 | Pass "123456789" For Sandbox Mode and Production Mode read Prerequisites For Google Pay.     |
 | googleMerchantName  | String                 | Pass "Merchant_Name" For Sandbox Mode and Production Mode read Prerequisites For Google Pay. |
 
@@ -185,6 +187,7 @@ Example 1 :
                           paymentButtonColor: Colors.black,
                           paymentButtonTextColor: Colors.white,
                           themeColor: Colors.green,
+                          merchantSadadId: 'YOUR_SADAD_ID',
                           googleMerchantID: 'BCR2D453R6Y72312',
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
@@ -211,12 +214,11 @@ Example 2 :
                           titleText: "Lorem Sample",
                           paymentButtonColor: Colors.red,
                           paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.brown
+                          themeColor: Colors.brown,
+                          merchantSadadId: 'YOUR_SADAD_ID',
                           googleMerchantID: 'BCR2D453R6Y72312',
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 2:
 
 ![SDKScreenShot2](https://github.com/user-attachments/assets/aaf77bd6-2a47-4028-a031-d873f7ad2d69)
-
-
