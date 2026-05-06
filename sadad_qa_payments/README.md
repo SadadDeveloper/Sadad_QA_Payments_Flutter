@@ -4,9 +4,9 @@ Flutter plugin for Sadad Payment SDK.
 
 ## Getting Started
 
-This flutter plugin is a wrapper around our Android and iOS SDKs.
+This Flutter plugin is a wrapper around our Android and iOS SDKs.
 
-The following documentation is only focused on the wrapper around our flutter Android and iOS SDKs. To know more about our SDKs and how to link them within the projects, refer to the following documentation:
+The following documentation is only focused on the wrapper around our Flutter Android and iOS SDKs. To know more about our SDKs and how to link them within the projects, refer to the following documentation:
 
 
 To know more about Sadad payment flow and steps involved, read up here: [https://github.com/SadadDeveloper/Sadad_SDK_Android](https://github.com/SadadDeveloper/Sadad_SDK_Android)
@@ -16,18 +16,18 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 - Sign up for a Sadad Account and generate the API Keys from the <a href="https://panel.sadad.qa" target="_blank">Sadad Dashboard</a>. Using the Test keys helps simulate a sandbox environment. No actual monetary transaction happens when using the Test keys. Use Live keys once you have thoroughly tested the application and are ready to go live.
 
 ## Prerequisites For Google Pay (production only)
-- Register your business from  <a href="https://pay.google.com/business/console/" target="_blank">Google Pay</a> Console. For a hassle-free go live process, register the business under the same Google account which is used for your application on Google PlayStore.
-- Once the basic regsitration and verification on Google Pay is completed, visit the above link again and go to Google Pay API from the left side menu. You should see your hosted Google Play applications there.
-- Click on the Manage button under relevant application to which you want to integrate Google Pay using Sadad Flutter SDK. The application will be in "Not started" state initally.
+- Register your business from  <a href="https://pay.google.com/business/console/" target="_blank">Google Pay</a> Console. For a hassle-free go live process, register the business under the same Google account which is used for your application on Google Play Store.
+- Once the basic registration and verification on Google Pay is completed, visit the above link again and go to Google Pay API from the left side menu. You should see your hosted Google Play applications there.
+- Click on the Manage button under relevant application to which you want to integrate Google Pay using Sadad Flutter SDK. The application will be in "Not started" state initially.
 
 ![googleSS1.png](/assets/googleSS1.png)
 
-- On the next page select Integration type "Gateway". Under "Screenshots of your buyflow" upload all the relevant screenshots from your Flutter application with Sadad Flutter SDK integrated with sandbox mode enabled. You may click View Examples button to see sample screenshots.
+- On the next page select Integration type "Gateway". Under "Screenshots of your buy flow" upload all the relevant screenshots from your Flutter application with Sadad Flutter SDK integrated with sandbox mode enabled. You may click View Examples button to see sample screenshots.
 
 ![googleSS2.png](/assets/googleSS2.png)
 
-- Once uploaded submit the application for review by accepting terms and conditions and checking the items in the checlist.
-- You will recevie an email from Google Pay once your integration with app is verified. Visit Google Pay business console again from the link mentioned above and on the top right side, you will see your Google Pay merchant ID.
+- Once uploaded submit the application for review by accepting terms and conditions and checking the items in the checklist.
+- You will receive an email from Google Pay once your integration with app is verified. Visit Google Pay business console again from the link mentioned above and on the top right side, you will see your Google Pay merchant ID.
 
 ![googleSS3.png](/assets/googleSS3.png)
 
@@ -133,7 +133,7 @@ Here is the parameter type and description to pass.
 
 | Field Name | Type                  | Description                                                                                  |
 | ---------- |-----------------------|----------------------------------------------------------------------------------------------|
-| orderId  | String                | Pass orderId it shuold be unique.                                                            |
+| orderId  | String                | Pass orderId it should be unique.                                                            |
 | productDetail    | [Map<String, String>] | Pass your product details array of Map<String, String>.                                      |
 | customerName  | String                | Pass your customer name.                                                                     |
 | amount  | Double                | Pass amount of your order.                                                                   |
@@ -141,10 +141,10 @@ Here is the parameter type and description to pass.
 | mobile  | String                | Pass mobile number of your customer.                                                         |
 | token  | String                | Pass token generated using Sadad.                                                            |
 | packageMode    | PackageMode           | Pass package mode Sandbox or Live. During testing pass sandbox.                              |
-| isWalletEnabled  | Bool                  | Pass true if you want to allow Google pay and apple pay enable for payment.                  |
-| paymentTypes  | [PaymentType]         | Pass array of payment type which you want cutomer will use. Blank array will show all types. |
+| isWalletEnabled  | Bool                  | Pass true if you want to allow Google Pay and Apple Pay enable for payment.                  |
+| paymentTypes  | [PaymentType]         | Pass array of payment type which you want customer will use. Blank array will show all types. |
 | image    | Image                 | Pass your app logo or brand logo to show on Payment SDK.                                     |
-| titleText  | String                | Pass your Brand name to show on payment gate way.                                            |
+| titleText  | String                | Pass your Brand name to show on payment gateway.                                             |
 | paymentButtonColor  | Color                 | Pass Color for Pay button background color.                                                  |
 | paymentButtonTextColor    | Color                 | Pass Color for Pay button text color.                                                        |
 | themeColor  | Color                 | Pass color for set theme color of overall Payment gateway.                                   |
