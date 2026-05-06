@@ -49,28 +49,28 @@ class PaymentScreen extends StatefulWidget {
   String titleText;
   List<Map> productDetail;
   PackageMode packageMode;
-
   String orderId;
-
+  String merchantSadadId;
   PaymentScreen(
       {super.key,
-      required this.themeColor,
-      required this.customerName,
-      required this.titleText,
-      required this.paymentButtonColor,
-      required this.paymentButtonTextColor,
-      required this.mobile,
-      required this.token,
-      required this.email,
-      required this.isWalletEnabled,
-      required this.productDetail,
-      required this.amount,
-      required this.packageMode,
-      required this.image,
-      required this.orderId,
+        required this.themeColor,
+        required this.customerName,
+        required this.titleText,
+        required this.paymentButtonColor,
+        required this.paymentButtonTextColor,
+        required this.mobile,
+        required this.token,
+        required this.email,
+        required this.isWalletEnabled,
+        required this.productDetail,
+        required this.amount,
+        required this.packageMode,
+        required this.image,
+        required this.orderId,
         required this.googleMerchantID,
         required this.googleMerchantName,
-      this.paymentTypes = const [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay]});
+        required this.merchantSadadId,
+        this.paymentTypes = const [PaymentType.creditCard, PaymentType.debitCard, PaymentType.sadadPay]});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -101,6 +101,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Timer? timer;
   String cardType = "";
   SendOtpModel? sendOtpModel;
+  String? mpgsMerchantIdForLive = null;
+  String? mpgsMerchantIdForSandbox = null;
   final sadadPayForm = GlobalKey<FormState>();
   final creditCardForm = GlobalKey<FormState>();
   final creditCardHolderForm = GlobalKey<FormState>();
@@ -273,15 +275,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               isDebug == true
                   ? Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          "Test Mode",
-                          style: TextStyle(color: AppColors.black, fontSize: useMobileLayout ? 16 : 20),
-                        ),
-                      ),
-                      decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.circular(4)),
-                    )
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "Test Mode",
+                    style: TextStyle(color: AppColors.black, fontSize: useMobileLayout ? 16 : 20),
+                  ),
+                ),
+                decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.circular(4)),
+              )
                   : SizedBox(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -332,7 +334,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           height: MediaQuery.of(context).size.width * 0.16,
                           padding: const EdgeInsets.all(8),
                           decoration:
-                              BoxDecoration(color: AppColors.transparent, borderRadius: BorderRadius.circular(6)),
+                          BoxDecoration(color: AppColors.transparent, borderRadius: BorderRadius.circular(6)),
                           child: widget.image,
                         ),
                         const SizedBox(height: 9),
@@ -396,19 +398,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 40,
                   child: selectedLanguage.languageCode == "en"
                       ? Row(mainAxisSize: MainAxisSize.min, children: [
-                          Text(
-                            "Select an option to pay ".translate(),
-                            style: TextStyle(color: AppColors.white, fontSize: useMobileLayout ? 12 : 17),
-                          ),
-                          priceWidget(price: roundOffToXDecimal(widget.amount, numberOfDecimal: 2).toString())
-                        ])
+                    Text(
+                      "Select an option to pay ".translate(),
+                      style: TextStyle(color: AppColors.white, fontSize: useMobileLayout ? 12 : 17),
+                    ),
+                    priceWidget(price: roundOffToXDecimal(widget.amount, numberOfDecimal: 2).toString())
+                  ])
                       : Row(mainAxisSize: MainAxisSize.min, children: [
-                          priceWidget(price: roundOffToXDecimal(widget.amount, numberOfDecimal: 2).toString()),
-                          Text(
-                            "Select an option to pay ".translate(),
-                            style: TextStyle(color: AppColors.white, fontSize: useMobileLayout ? 12 : 17),
-                          )
-                        ])),
+                    priceWidget(price: roundOffToXDecimal(widget.amount, numberOfDecimal: 2).toString()),
+                    Text(
+                      "Select an option to pay ".translate(),
+                      style: TextStyle(color: AppColors.white, fontSize: useMobileLayout ? 12 : 17),
+                    )
+                  ])),
               const SizedBox(height: 25)
             ]),
           ),
@@ -418,92 +420,93 @@ class _PaymentScreenState extends State<PaymentScreen> {
             alignment: Alignment.bottomCenter,
             child: Platform.isIOS
                 ? InkWell(
-                    onTap: () {
-                      // if let merchantID = arrUserMetaPreferences["userId"] as? Int{
-                      // UserDefaults.standard.set(merchantID, forKey: "MerchantUserID")
-                      // }
-                      // if let arrUsers = arrUserMetaPreferences["user"] as? [String:Any], let merchantID = arrUsers["SadadId"] as? String{
-                      // UserDefaults.standard.set(merchantID, forKey: "MerchantSadadID")
-                      // }
-                      if (widget.packageMode == PackageMode.release) {
-                        if (userMetaPreference?.user?.sadadId == "" || userMetaPreference?.userId == "") {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                  child: Column(
-                                    children: [
-                                      Text("Merchant has no permission to use SDK. Please contact to administrator."
-                                          .translate()),
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Okay".translate()))
-                                    ],
-                                  ),
-                                );
-                              });
-                        } else {
-                          WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-                            themeColor: widget.themeColor ?? primaryColor,
-                            merchantSadadId: userMetaPreference?.user?.sadadId,
-                            checksum: checkSum,
-                            merchantUserId: userMetaPreference?.userId,
-                            cardHolderName: "cardholdername",
-                            email: widget.email,
-                            paymentMethod: "applePay",
-                            contactNumber: widget.mobile,
-                            transactionAmount: widget.amount,
-                            orderID: widget.orderId,
-                            productDetail: widget.productDetail,
-                            transactionId: "",
-                            token: widget.token,
+              onTap: () {
+                // if let merchantID = arrUserMetaPreferences["userId"] as? Int{
+                // UserDefaults.standard.set(merchantID, forKey: "MerchantUserID")
+                // }
+                // if let arrUsers = arrUserMetaPreferences["user"] as? [String:Any], let merchantID = arrUsers["SadadId"] as? String{
+                // UserDefaults.standard.set(merchantID, forKey: "MerchantSadadID")
+                // }
+                if (widget.packageMode == PackageMode.release) {
+                  if (userMetaPreference?.user?.sadadId == "" || userMetaPreference?.userId == "") {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            child: Column(
+                              children: [
+                                Text("Merchant has no permission to use SDK. Please contact to administrator."
+                                    .translate()),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Okay".translate()))
+                              ],
+                            ),
                           );
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-                            },
-                          ));
-                        }
-                      } else {
-                        AppDialog.commonWarningDialog(
-                            themeColor: widget.themeColor ?? AppColors.primaryColor,
-                            useMobileLayout: useMobileLayout,
-                            context: context,
-                            title: "Sandbox mode".translate(),
-                            subTitle: "Sorry, Apple pay is not allowed in sandbox.".translate(),
-                            buttonOnTap: () {
-                              Navigator.pop(context);
-                            },
-                            buttonText: "Okay".translate());
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(color: AppColors.black, borderRadius: BorderRadius.circular(10)),
-                      height: useMobileLayout ? 50 : 65,
-                      margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 40 : 62),
-                      child:
-                          Center(child: Image.asset(AssetPath.applePay, package: 'sadad_qa_payments', height: 22)),
-                    ),
-                  )
+                        });
+                  } else {
+                    WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+                      themeColor: widget.themeColor ?? primaryColor,
+                      merchantSadadId: userMetaPreference?.user?.sadadId,
+                      checksum: checkSum,
+                      merchantUserId: userMetaPreference?.userId,
+                      cardHolderName: "cardholdername",
+                      email: widget.email,
+                      paymentMethod: "applePay",
+                      contactNumber: widget.mobile,
+                      transactionAmount: widget.amount,
+                      orderID: widget.orderId,
+                      productDetail: widget.productDetail,
+                      transactionId: "",
+                      token: widget.token,
+                    );
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
+                      },
+                    ));
+                  }
+                } else {
+                  AppDialog.commonWarningDialog(
+                      themeColor: widget.themeColor ?? AppColors.primaryColor,
+                      useMobileLayout: useMobileLayout,
+                      context: context,
+                      title: "Sandbox mode".translate(),
+                      subTitle: "Sorry, Apple pay is not allowed in sandbox.".translate(),
+                      buttonOnTap: () {
+                        Navigator.pop(context);
+                      },
+                      buttonText: "Okay".translate());
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(color: AppColors.black, borderRadius: BorderRadius.circular(10)),
+                height: useMobileLayout ? 50 : 65,
+                margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 40 : 62),
+                child:
+                Center(child: Image.asset(AssetPath.applePay, package: 'sadad_qa_payments', height: 22)),
+              ),
+            )
                 :
-                // Google pay Dev testSPSQNB01
-                // Google pay Live SPSQNB01
+            // Google pay Dev testSPSQNB01
+            // Google pay Live SPSQNB01
 
-                // Live Environment
-                //         "merchantInfo": {
-                // "merchantId": "BCR2DN6TR6Y7Z2CJ",
-                // "merchantName": "Sadad Payment Solutions"
-                // },
-                //"environment":"PRODUCTION",
+            // Live Environment
+            //         "merchantInfo": {
+            // "merchantId": "BCR2DN6TR6Y7Z2CJ",
+            // "merchantName": "Sadad Payment Solutions"
+            // },
+            //"environment":"PRODUCTION",
 
-                ///////////////
-                widget.packageMode == PackageMode.release ?
-                GooglePayButton(
-                    height: useMobileLayout ? 50 : 65,
-                    width: MediaQuery.of(context).size.width - (useMobileLayout ? 80 : 124),
-                    paymentConfiguration: PaymentConfiguration.fromJsonString('''{
+            ///////////////
+            widget.packageMode == PackageMode.release ?
+            mpgsMerchantIdForLive == null
+                ? SizedBox() : GooglePayButton(
+              height: useMobileLayout ? 50 : 65,
+              width: MediaQuery.of(context).size.width - (useMobileLayout ? 80 : 124),
+              paymentConfiguration: PaymentConfiguration.fromJsonString('''{
    "provider":"google_pay",
    "data":{
       "environment":"PRODUCTION",
@@ -520,7 +523,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                "type":"PAYMENT_GATEWAY",
                "parameters":{
                   "gateway":"mpgs",
-                  "gatewayMerchantId":"SPSQNB01"
+                  "gatewayMerchantId":"$mpgsMerchantIdForLive"
                }
             },
             "parameters":{
@@ -546,89 +549,90 @@ class _PaymentScreenState extends State<PaymentScreen> {
       }
    }
 }'''),
-                    paymentItems: [
-                      PaymentItem(
-                        label: "Total".translate(),
-                        amount: widget.amount.toString() ?? "",
-                        status: PaymentItemStatus.final_price,
-                        type: PaymentItemType.total,
-                      )
-                    ],
-                    type: GooglePayButtonType.plain,
-                    margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 20 : 62),
-                    onPaymentResult: (result) async {
-                      AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-                      var tokenData = result["paymentMethodData"]["tokenizationData"]["token"];
-                      String? ipAddress = await NetworkInfo().getWifiIPv6();
-                      double amount = widget.amount ?? 0;
-                      int finalamount = (amount * 100).toInt();
-                      String cardHolderName = "" ?? "";
-                      String firstName = "";
-                      String lastName = "";
-                      String country = "";
-                      String emailId = widget.email ?? "";
-                      String cellNo = widget.mobile ?? "";
-                      //String checkSumLocal = checkSum;
-                      // As per basecamp requirement remove checksum from Rishabh
-                      String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
-                      String merchantSadadID = userMetaPreference?.user?.sadadId ?? ""; //"9246722";
-                      var strProductDetails = jsonEncode(widget.productDetail);
-                      strProductDetails = strProductDetails.replaceAll("(", "[");
-                      strProductDetails = strProductDetails.replaceAll(")", "]");
-                      strProductDetails = strProductDetails.replaceAll("\n", "");
-                      var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
-                      var postString =
-                          "issandboxmode=${(widget.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=$lang&website_ref_no_credit=${widget.orderId}&isFlutter=1&vpc_Version=1&mobileOS=${Platform.isIOS ? "1" : "2"}&vpc_Command=pay&paymentToken=$tokenData&walletProvider=GOOGLE_PAY&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${""}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.token}";
+              paymentItems: [
+                PaymentItem(
+                  label: "Total".translate(),
+                  amount: widget.amount.toString() ?? "",
+                  status: PaymentItemStatus.final_price,
+                  type: PaymentItemType.total,
+                )
+              ],
+              type: GooglePayButtonType.plain,
+              margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 20 : 62),
+              onPaymentResult: (result) async {
+                AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
+                var tokenData = result["paymentMethodData"]["tokenizationData"]["token"];
+                String? ipAddress = await NetworkInfo().getWifiIPv6();
+                double amount = widget.amount ?? 0;
+                int finalamount = (amount * 100).toInt();
+                String cardHolderName = "" ?? "";
+                String firstName = "";
+                String lastName = "";
+                String country = "";
+                String emailId = widget.email ?? "";
+                String cellNo = widget.mobile ?? "";
+                //String checkSumLocal = checkSum;
+                // As per basecamp requirement remove checksum from Rishabh
+                String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
+                String merchantSadadID = userMetaPreference?.user?.sadadId ?? ""; //"9246722";
+                var strProductDetails = jsonEncode(widget.productDetail);
+                strProductDetails = strProductDetails.replaceAll("(", "[");
+                strProductDetails = strProductDetails.replaceAll(")", "]");
+                strProductDetails = strProductDetails.replaceAll("\n", "");
+                var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+                var postString =
+                    "issandboxmode=${(widget.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=$lang&website_ref_no_credit=${widget.orderId}&isFlutter=1&vpc_Version=1&mobileOS=${Platform.isIOS ? "1" : "2"}&vpc_Command=pay&paymentToken=$tokenData&walletProvider=GOOGLE_PAY&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${""}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.token}";
 
-                      var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-                      String encodedString = base64.encode(utf8.encode(temp)).trim();
+                var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+                String encodedString = base64.encode(utf8.encode(temp)).trim();
 
-                      var htmlString2 = await AppServices.googlePayment(encrypt_string: encodedString);
-                      Navigator.pop(context);
+                var htmlString2 = await AppServices.googlePayment(encrypt_string: encodedString);
+                Navigator.pop(context);
 
-    if (htmlString2.toString().contains("<div")) {
-                        //if(true) {
-                        WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-                          themeColor: widget.themeColor ?? primaryColor,
-                          merchantSadadId: userMetaPreference?.user?.sadadId,
-                          checksum: checkSum,
-                          merchantUserId: userMetaPreference?.userId,
-                          cardHolderName: "cardholdername",
-                          email: widget.email,
-                          paymentMethod: "googlePay",
-                          contactNumber: widget.mobile,
-                          transactionAmount: widget.amount,
-                          productDetail: widget.productDetail,
-                          transactionId: "",
-                          token: widget.token,
-                          htmlString:htmlString2,//htmlString?["msg"],
-                        );
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-                          },
-                        ));
-                      } else {
-                        AppDialog.commonWarningDialog(
-                            themeColor: widget.themeColor ?? AppColors.primaryColor,
-                            useMobileLayout: useMobileLayout,
-                            context: context,
-                            title: "Issue".translate(),
-                            subTitle:
-                                "Sorry, We are not able to process the transaction. Please try again.".translate(),
-                            buttonOnTap: () {
-                              Navigator.pop(context);
-                              },
-                            buttonText: "Okay".translate());
-                      }
+                if (htmlString2.toString().contains("<div")) {
+                  //if(true) {
+                  WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+                    themeColor: widget.themeColor ?? primaryColor,
+                    merchantSadadId: userMetaPreference?.user?.sadadId,
+                    checksum: checkSum,
+                    merchantUserId: userMetaPreference?.userId,
+                    cardHolderName: "cardholdername",
+                    email: widget.email,
+                    paymentMethod: "googlePay",
+                    contactNumber: widget.mobile,
+                    transactionAmount: widget.amount,
+                    productDetail: widget.productDetail,
+                    transactionId: "",
+                    token: widget.token,
+                    htmlString:htmlString2,//htmlString?["msg"],
+                  );
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
                     },
-                    loadingIndicator: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ) : GooglePayButton(
-                  height: useMobileLayout ? 50 : 65,
-                  width: MediaQuery.of(context).size.width - (useMobileLayout ? 80 : 124),
-                  paymentConfiguration: PaymentConfiguration.fromJsonString('''{
+                  ));
+                } else {
+                  AppDialog.commonWarningDialog(
+                      themeColor: widget.themeColor ?? AppColors.primaryColor,
+                      useMobileLayout: useMobileLayout,
+                      context: context,
+                      title: "Issue".translate(),
+                      subTitle:
+                      "Sorry, We are not able to process the transaction. Please try again.".translate(),
+                      buttonOnTap: () {
+                        Navigator.pop(context);
+                      },
+                      buttonText: "Okay".translate());
+                }
+              },
+              loadingIndicator: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ) : mpgsMerchantIdForSandbox == null
+                ? SizedBox() : GooglePayButton(
+              height: useMobileLayout ? 50 : 65,
+              width: MediaQuery.of(context).size.width - (useMobileLayout ? 80 : 124),
+              paymentConfiguration: PaymentConfiguration.fromJsonString('''{
    "provider":"google_pay",
    "data":{
       "environment":"TEST",
@@ -641,7 +645,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                "type":"PAYMENT_GATEWAY",
                "parameters":{
                   "gateway":"mpgs",
-                  "gatewayMerchantId":"testSPSQNB01"
+                  "gatewayMerchantId":"$mpgsMerchantIdForSandbox"
                }
             },
             "parameters":{
@@ -667,124 +671,124 @@ class _PaymentScreenState extends State<PaymentScreen> {
       }
    }
 }'''),
-                  paymentItems: [
-                    PaymentItem(
-                      label: "Total".translate(),
-                      amount: widget.amount.toString() ?? "",
-                      status: PaymentItemStatus.final_price,
-                      type: PaymentItemType.total,
-                    )
-                  ],
-                  type: GooglePayButtonType.plain,
-                  margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 20 : 62),
-                  onPaymentResult: (result) async {
-                    AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-                    var tokenData = result["paymentMethodData"]["tokenizationData"]["token"];
-                    String? ipAddress = await NetworkInfo().getWifiIPv6();
-                    double amount = widget.amount ?? 0;
-                    int finalamount = (amount * 100).toInt();
-                    String cardHolderName = "" ?? "";
-                    String firstName = "";
-                    String lastName = "";
-                    String country = "";
-                    String emailId = widget.email ?? "";
-                    String cellNo = widget.mobile ?? "";
-                    //String checkSumLocal = checkSum;
-                    // As per basecamp requirement remove checksum from Rishabh
-                    String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
-                    String merchantSadadID = userMetaPreference?.user?.sadadId ?? ""; //"9246722";
-                    var strProductDetails = jsonEncode(widget.productDetail);
-                    strProductDetails = strProductDetails.replaceAll("(", "[");
-                    strProductDetails = strProductDetails.replaceAll(")", "]");
-                    strProductDetails = strProductDetails.replaceAll("\n", "");
-                    var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
-                    var postString =
-                        "issandboxmode=${(widget.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=$lang&website_ref_no_credit=${widget.orderId}&isFlutter=1&vpc_Version=1&mobileOS=${Platform.isIOS ? "1" : "2"}&vpc_Command=pay&paymentToken=$tokenData&walletProvider=GOOGLE_PAY&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${""}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=$merchantSadadID&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.token}";
-                    // var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-                    // String encodedString = base64.encode(utf8.encode(temp)).trim();
-                    // var postString =
-                    //     "is_Flutter=1&vpc_Version=1&deviceIp=$ipAddress&transactionmodeId=5&MID=${userMetaPreference?.user?.sadadId.toString() ?? userMetaPreference?.userId}&vpc_Command=pay&vpc_Merchant=${userMetaPreference?.user?.sadadId.toString()}&vpc_AccessCode=F4996AF0&vpc_MerchTxnRef=6AQ89F3&vpc_OrderInfo=Test Order&vpc_Amount=${widget.amount}&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS 2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=SD417921222270&transactionEntityId=9&email=demo@gmail.com&mobilePhone=9749898989898&city=&country=&walletProvider=GOOGLE_PAY&paymentToken=$tokenData&carduser_id=${userMetaPreference?.userId}";
-                    var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
-                    String encodedString = base64.encode(utf8.encode(temp)).trim();
+              paymentItems: [
+                PaymentItem(
+                  label: "Total".translate(),
+                  amount: widget.amount.toString() ?? "",
+                  status: PaymentItemStatus.final_price,
+                  type: PaymentItemType.total,
+                )
+              ],
+              type: GooglePayButtonType.plain,
+              margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 20 : 62),
+              onPaymentResult: (result) async {
+                AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
+                var tokenData = result["paymentMethodData"]["tokenizationData"]["token"];
+                String? ipAddress = await NetworkInfo().getWifiIPv6();
+                double amount = widget.amount ?? 0;
+                int finalamount = (amount * 100).toInt();
+                String cardHolderName = "" ?? "";
+                String firstName = "";
+                String lastName = "";
+                String country = "";
+                String emailId = widget.email ?? "";
+                String cellNo = widget.mobile ?? "";
+                //String checkSumLocal = checkSum;
+                // As per basecamp requirement remove checksum from Rishabh
+                String merchantID = userMetaPreference?.userId ?? ""; //"9246722"
+                String merchantSadadID = userMetaPreference?.user?.sadadId ?? ""; //"9246722";
+                var strProductDetails = jsonEncode(widget.productDetail);
+                strProductDetails = strProductDetails.replaceAll("(", "[");
+                strProductDetails = strProductDetails.replaceAll(")", "]");
+                strProductDetails = strProductDetails.replaceAll("\n", "");
+                var lang = selectedLanguage.languageCode == "en" ? "en" : "ar";
+                var postString =
+                    "issandboxmode=${(widget.packageMode == PackageMode.debug) ? "1" : "0"}&isLanguage=$lang&website_ref_no_credit=${widget.orderId}&isFlutter=1&vpc_Version=1&mobileOS=${Platform.isIOS ? "1" : "2"}&vpc_Command=pay&paymentToken=$tokenData&walletProvider=GOOGLE_PAY&vpc_Merchant=DB93443&vpc_AccessCode=F4996AF0&vpc_OrderInfo=TestOrder&vpc_Amount=$finalamount&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=${""}&credit_phoneno_hidden=$country&credit_email_hidden=$country&productamount=$finalamount&vendorId=$merchantID&merchant_code=${widget.merchantSadadId}&website_ref_no=$country&return_url=$country&transactionEntityId=9&ipAddress=$ipAddress&firstName=$firstName&lastName=$lastName&nameOnCard=$cardHolderName&email=$emailId&mobilePhone=$cellNo&productdetail=$strProductDetails&paymentCode=${widget.token}";
+                // var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+                // String encodedString = base64.encode(utf8.encode(temp)).trim();
+                // var postString =
+                //     "is_Flutter=1&vpc_Version=1&deviceIp=$ipAddress&transactionmodeId=5&MID=${userMetaPreference?.user?.sadadId.toString() ?? userMetaPreference?.userId}&vpc_Command=pay&vpc_Merchant=${userMetaPreference?.user?.sadadId.toString()}&vpc_AccessCode=F4996AF0&vpc_MerchTxnRef=6AQ89F3&vpc_OrderInfo=Test Order&vpc_Amount=${widget.amount}&vpc_Currency=QAR&vpc_TicketNo=6AQ89F3&vpc_ReturnURL=https://sadad.de/bankapi/25/PHP_VPC_3DS 2.5 Party_DR.php&vpc_Gateway=ssl&vpc_MerchTxnRef=SD417921222270&transactionEntityId=9&email=demo@gmail.com&mobilePhone=9749898989898&city=&country=&walletProvider=GOOGLE_PAY&paymentToken=$tokenData&carduser_id=${userMetaPreference?.userId}";
+                var temp = CryptLib.instance.encryptPlainTextWithRandomIV(postString, "XDRvx?#Py^5V@3jC");
+                String encodedString = base64.encode(utf8.encode(temp)).trim();
 
-                    var htmlString2 = await AppServices.googlePayment(encrypt_string: encodedString);
-                    // Map? htmlString = await AppServices.googlePayCompletion(
-                    //   encodedString: encodedString,
-                    //   googlePayURL: ApiEndPoint.googlePayWebRequest,
-                    // );
-                    Navigator.pop(context);
-                    // if (htmlString == null) {
-                    //   AppDialog.commonWarningDialog(
-                    //       themeColor: widget.themeColor ?? AppColors.primaryColor,
-                    //       useMobileLayout: useMobileLayout,
-                    //       context: context,
-                    //       title: "Issue".translate(),
-                    //       subTitle:
-                    //           "Sorry, We are not able to process the transaction. Please try again.".translate(),
-                    //       buttonOnTap: () {
-                    //         Navigator.pop(context);
-                    //         Navigator.pop(context);
-                    //       },
-                    //       buttonText: "Okay".translate());
-                    // } else {
-                    //   if (htmlString["status"].toString() == "success") {
-                    //webViewString = htmlString["msg"];
-                    //webController.loadHtmlString(webViewString as String);
-                    if (htmlString2.toString().contains("<div")) {
-                      //if(true) {
-                      WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
-                        themeColor: widget.themeColor ?? primaryColor,
-                        merchantSadadId: userMetaPreference?.user?.sadadId,
-                        checksum: checkSum,
-                        merchantUserId: userMetaPreference?.userId,
-                        cardHolderName: "cardholdername",
-                        email: widget.email,
-                        paymentMethod: "googlePay",
-                        contactNumber: widget.mobile,
-                        transactionAmount: widget.amount,
-                        productDetail: widget.productDetail,
-                        transactionId: "",
-                        token: widget.token,
-                        htmlString:htmlString2,//htmlString?["msg"],
-                      );
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
-                        },
-                      ));
-                    } else {
-                      AppDialog.commonWarningDialog(
-                          themeColor: widget.themeColor ?? AppColors.primaryColor,
-                          useMobileLayout: useMobileLayout,
-                          context: context,
-                          title: "Issue".translate(),
-                          subTitle:
-                          "Sorry, We are not able to process the transaction. Please try again.".translate(),
-                          buttonOnTap: () {
-                            Navigator.pop(context);
-                          },
-                          buttonText: "Okay".translate());
-                    }
-                    // } else {
-                    //   AppDialog.commonWarningDialog(
-                    //       themeColor: widget.themeColor ?? AppColors.primaryColor,
-                    //       useMobileLayout: useMobileLayout,
-                    //       context: context,
-                    //       title: "Issue".translate(),
-                    //       subTitle: htmlString["msg"].toString(),
-                    //       buttonOnTap: () {
-                    //         Navigator.pop(context);
-                    //         Navigator.pop(context);
-                    //       },
-                    //       buttonText: "Okay".translate());
-                    // }
-                    //}
-                    //print("html String $htmlString");
-                  },
-                  loadingIndicator: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+                var htmlString2 = await AppServices.googlePayment(encrypt_string: encodedString);
+                // Map? htmlString = await AppServices.googlePayCompletion(
+                //   encodedString: encodedString,
+                //   googlePayURL: ApiEndPoint.googlePayWebRequest,
+                // );
+                Navigator.pop(context);
+                // if (htmlString == null) {
+                //   AppDialog.commonWarningDialog(
+                //       themeColor: widget.themeColor ?? AppColors.primaryColor,
+                //       useMobileLayout: useMobileLayout,
+                //       context: context,
+                //       title: "Issue".translate(),
+                //       subTitle:
+                //           "Sorry, We are not able to process the transaction. Please try again.".translate(),
+                //       buttonOnTap: () {
+                //         Navigator.pop(context);
+                //         Navigator.pop(context);
+                //       },
+                //       buttonText: "Okay".translate());
+                // } else {
+                //   if (htmlString["status"].toString() == "success") {
+                //webViewString = htmlString["msg"];
+                //webController.loadHtmlString(webViewString as String);
+                if (htmlString2.toString().contains("<div")) {
+                  //if(true) {
+                  WebViewDetailsModel webViewDetailsModel = WebViewDetailsModel(
+                    themeColor: widget.themeColor ?? primaryColor,
+                    merchantSadadId: userMetaPreference?.user?.sadadId,
+                    checksum: checkSum,
+                    merchantUserId: userMetaPreference?.userId,
+                    cardHolderName: "cardholdername",
+                    email: widget.email,
+                    paymentMethod: "googlePay",
+                    contactNumber: widget.mobile,
+                    transactionAmount: widget.amount,
+                    productDetail: widget.productDetail,
+                    transactionId: "",
+                    token: widget.token,
+                    htmlString:htmlString2,//htmlString?["msg"],
+                  );
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return PaymentWebViewScreen(webViewDetailsModel: webViewDetailsModel);
+                    },
+                  ));
+                } else {
+                  AppDialog.commonWarningDialog(
+                      themeColor: widget.themeColor ?? AppColors.primaryColor,
+                      useMobileLayout: useMobileLayout,
+                      context: context,
+                      title: "Issue".translate(),
+                      subTitle:
+                      "Sorry, We are not able to process the transaction. Please try again.".translate(),
+                      buttonOnTap: () {
+                        Navigator.pop(context);
+                      },
+                      buttonText: "Okay".translate());
+                }
+                // } else {
+                //   AppDialog.commonWarningDialog(
+                //       themeColor: widget.themeColor ?? AppColors.primaryColor,
+                //       useMobileLayout: useMobileLayout,
+                //       context: context,
+                //       title: "Issue".translate(),
+                //       subTitle: htmlString["msg"].toString(),
+                //       buttonOnTap: () {
+                //         Navigator.pop(context);
+                //         Navigator.pop(context);
+                //       },
+                //       buttonText: "Okay".translate());
+                // }
+                //}
+                //print("html String $htmlString");
+              },
+              loadingIndicator: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
           )
       ]),
     );
@@ -823,91 +827,91 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget priceWidget({required String price, double? fontSizeForLabel, double? fontSizeForPrice}) {
     return selectedLanguage.languageCode == "ar"
         ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(" ر.ق ",
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForLabel ?? 10,
-                      fontWeight: FontWeight.w900,
-                      fontFeatures: [const FontFeature.superscripts()])),
-              Text(price,
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForPrice ?? 15,
-                      fontWeight: FontWeight.w900)),
-            ],
-          )
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(" ر.ق ",
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForLabel ?? 10,
+                fontWeight: FontWeight.w900,
+                fontFeatures: [const FontFeature.superscripts()])),
+        Text(price,
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForPrice ?? 15,
+                fontWeight: FontWeight.w900)),
+      ],
+    )
         : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(price,
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForPrice ?? 15,
-                      fontWeight: FontWeight.w900)),
-              Text("QAR",
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForLabel ?? 10,
-                      fontWeight: FontWeight.w900,
-                      fontFeatures: [const FontFeature.superscripts()])),
-            ],
-          );
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(price,
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForPrice ?? 15,
+                fontWeight: FontWeight.w900)),
+        Text("QAR",
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForLabel ?? 10,
+                fontWeight: FontWeight.w900,
+                fontFeatures: [const FontFeature.superscripts()])),
+      ],
+    );
   }
 
   Widget payButtonPriceWidget({required String price, double? fontSizeForLabel, double? fontSizeForPrice}) {
     return selectedLanguage.languageCode == "ar"
         ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(" ر.ق ",
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForLabel ?? 10,
-                      fontWeight: FontWeight.w900,
-                      fontFeatures: [const FontFeature.superscripts()])),
-              Text(selectedLanguage.languageCode == "en" ? "Pay".translate() + price : price,
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForPrice ?? 15,
-                      fontWeight: FontWeight.w900)),
-              selectedLanguage.languageCode == "ar"
-                  ? Text("Pay".translate(),
-                      style: TextStyle(
-                          color: widget.paymentButtonTextColor ?? Colors.white,
-                          fontSize: fontSizeForPrice ?? 15,
-                          fontWeight: FontWeight.w900))
-                  : SizedBox(),
-            ],
-          )
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(" ر.ق ",
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForLabel ?? 10,
+                fontWeight: FontWeight.w900,
+                fontFeatures: [const FontFeature.superscripts()])),
+        Text(selectedLanguage.languageCode == "en" ? "Pay".translate() + price : price,
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForPrice ?? 15,
+                fontWeight: FontWeight.w900)),
+        selectedLanguage.languageCode == "ar"
+            ? Text("Pay".translate(),
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForPrice ?? 15,
+                fontWeight: FontWeight.w900))
+            : SizedBox(),
+      ],
+    )
         : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(selectedLanguage.languageCode == "en" ? "Pay".translate() + price : price,
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForPrice ?? 15,
-                      fontWeight: FontWeight.w900)),
-              Text("QAR ",
-                  style: TextStyle(
-                      color: widget.paymentButtonTextColor ?? Colors.white,
-                      fontSize: fontSizeForLabel ?? 10,
-                      fontWeight: FontWeight.w900,
-                      fontFeatures: [const FontFeature.superscripts()])),
-              selectedLanguage.languageCode == "ar"
-                  ? Text("Pay".translate(),
-                      style: TextStyle(
-                          color: widget.paymentButtonTextColor ?? Colors.white,
-                          fontSize: fontSizeForPrice ?? 15,
-                          fontWeight: FontWeight.w900))
-                  : SizedBox(),
-            ],
-          );
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(selectedLanguage.languageCode == "en" ? "Pay".translate() + price : price,
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForPrice ?? 15,
+                fontWeight: FontWeight.w900)),
+        Text("QAR ",
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForLabel ?? 10,
+                fontWeight: FontWeight.w900,
+                fontFeatures: [const FontFeature.superscripts()])),
+        selectedLanguage.languageCode == "ar"
+            ? Text("Pay".translate(),
+            style: TextStyle(
+                color: widget.paymentButtonTextColor ?? Colors.white,
+                fontSize: fontSizeForPrice ?? 15,
+                fontWeight: FontWeight.w900))
+            : SizedBox(),
+      ],
+    );
   }
 
   Widget cardContainer(bool useMobileLayout,
@@ -1057,19 +1061,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   });
                 },
                 suffixIcon: cardNumberController.text.isEmpty
-                    //? const SizedBox()
+                //? const SizedBox()
                     ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Image.asset(AssetPath.masterCard, package: 'sadad_qa_payments', height: 19),
-                          Image.asset(AssetPath.visa, package: 'sadad_qa_payments', height: 19),
-                          Image.asset(AssetPath.americanExpress, package: 'sadad_qa_payments', height: 19)
-                        ],
-                      )
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Image.asset(AssetPath.masterCard, package: 'sadad_qa_payments', height: 19),
+                    Image.asset(AssetPath.visa, package: 'sadad_qa_payments', height: 19),
+                    Image.asset(AssetPath.americanExpress, package: 'sadad_qa_payments', height: 19)
+                  ],
+                )
                     : getImagePath(cardType).isEmpty
-                        ? const SizedBox()
-                        : Image.asset(getImagePath(cardType), package: 'sadad_qa_payments', height: 19),
+                    ? const SizedBox()
+                    : Image.asset(getImagePath(cardType), package: 'sadad_qa_payments', height: 19),
                 themeColor: widget.themeColor ?? primaryColor),
           ),
         ),
@@ -1114,7 +1118,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         } else {
                           int currentYear = DateTime.now().year;
                           int enteredYear =
-                              int.parse(currentYear.toString()[0] + currentYear.toString()[1] + p0.split("/").last);
+                          int.parse(currentYear.toString()[0] + currentYear.toString()[1] + p0.split("/").last);
                           int enteredMonth = int.parse(p0.split("/").first);
                           DateTime date = DateTime(enteredYear, enteredMonth + 1);
 
@@ -1804,9 +1808,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
             context: context,
             title: "Invalid Order ID".translate(),
             subTitle:
-                "Order IDs should include only alphanumeric characters, hyphens (-), dots (.), and underscores (_)."
-                    .translate()
-                    .translate(),
+            "Order IDs should include only alphanumeric characters, hyphens (-), dots (.), and underscores (_)."
+                .translate()
+                .translate(),
             buttonText: "Okay".translate(),
             buttonOnTap: () {
               Navigator.pop(context);
@@ -1819,8 +1823,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     //check mobile
     widget.mobile = widget.mobile.replaceAll("+", "");
-    //print("checkmobile ===>> ${widget.mobile.length < 8 || widget.mobile.length > 15}");
-    if (widget.mobile.length < 8 || widget.mobile.length > 15) {
+    widget.mobile = widget.mobile.replaceAll(" ", "");
+    RegExp regexMobileNo = RegExp(r'^[0-9]+$');
+    if ((regexMobileNo.hasMatch(widget.mobile) == false) || widget.mobile.length < 8 || widget.mobile.length > 15) {
       AppDialog.commonWarningDialog(
           themeColor: widget.themeColor ?? AppColors.primaryColor,
           context: context,
@@ -1865,6 +1870,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     if (settings?["usermetaprefrences"] != null) {
       userMetaPreference = UserMetaPreference.fromJson(settings?["usermetaprefrences"].first);
+      final googleConstant = await AppServices.googlePayGetConstant(
+          sadadId: widget.merchantSadadId,
+          token: widget.token,issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0"
+      );
+      if (googleConstant != null) {
+        setState(() {
+          mpgsMerchantIdForLive =
+              googleConstant["mpgs_merchant_id_for_live"]?.toString();
+
+          mpgsMerchantIdForSandbox =
+              googleConstant["mpgs_merchant_id_for_sandbox"]?.toString();
+        });
+      } else {
+        print("API returned null");
+      }
       List cardSetting = settings?["settings"];
       creditCardSettingsModel = cardSetting.map((e) => CreditCardSettingsModel.fromJson(e)).toList();
       checkSum = settings?['checksum']['hash'];
@@ -1940,7 +1960,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(15),
                     decoration:
-                        BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(5), boxShadow: [
+                    BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(5), boxShadow: [
                       BoxShadow(
                         color: AppColors.grey.withOpacity(0.5),
                         blurRadius: 40,
@@ -2010,7 +2030,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     margin: const EdgeInsets.all(20),
                     height: useMobileLayout ? 270 : 320,
                     decoration:
-                        BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10), boxShadow: [
+                    BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(10), boxShadow: [
                       BoxShadow(
                         color: AppColors.grey.withOpacity(0.5),
                         blurRadius: 20,
@@ -2026,7 +2046,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           padding: EdgeInsets.all(useMobileLayout ? 20 : 40),
                           child: Text("OTP Verification".translate(),
                               style:
-                                  const TextStyle(color: AppColors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                              const TextStyle(color: AppColors.black, fontWeight: FontWeight.bold, fontSize: 20)),
                         ),
                         /*PinFieldAutoFill(
                           controller: sadadPayOTPController,
@@ -2101,87 +2121,87 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           },
                         ),*/
                         LayoutBuilder(
-                          builder: (context, constraints) {
+                            builder: (context, constraints) {
 
-                            final size = (min(constraints.maxWidth, 275) - 30) / 6;
+                              final size = (min(constraints.maxWidth, 275) - 30) / 6;
 
-                            return Pinput(
-                              // validator: (s) {
-                              //   debugPrint("S ::$s");
-                              //   return ((s ?? '').length < 6) ? null : 'Pin is incorrect';
-                              // },
-                              // pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                              // showCursor: true,
-                              keyboardType: TextInputType.number,
+                              return Pinput(
+                                // validator: (s) {
+                                //   debugPrint("S ::$s");
+                                //   return ((s ?? '').length < 6) ? null : 'Pin is incorrect';
+                                // },
+                                // pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                                // showCursor: true,
+                                keyboardType: TextInputType.number,
 
-                              length: 6,
-                              defaultPinTheme: PinTheme(
-                                  textStyle: const TextStyle(fontSize: 20),
-                                  height: 40,
-                                  width: size,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey.shade400),
-                                      borderRadius: BorderRadius.circular(8)
-                                  )
-                              ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
-                              ],
-                              textInputAction: TextInputAction.go,
-                              onCompleted: (pin) async {
-                                if (pin.length == 6) {
-                                  AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-                                  // bool? success = await AppServices.sadadPayVerifyOtp(
-                                  //     token: widget.token, otp: code, userId: sendOtpModel!.userId!.toString());
-                                  //Navigator.pop(context);
-                                  //if (success!) {
-                                  String? ipAddress = await NetworkInfo().getWifiIPv6();
-                                  Map? data = await AppServices.sadadPayTransactionV6(
-                                      ipAddress: ipAddress ?? "",
-                                      sadadId: sendOtpModel!.id!,
-                                      userId: sendOtpModel!.userId!,
-                                      token: widget.token,
-                                      orderId: widget.orderId,
-                                      amount: widget.amount,issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0",
-                                      productDetails: widget.productDetail, otp: pin);
-                                  Navigator.pop(context);
-                                  if (data?["statusCode"] != null) {
-                                    AppDialog.commonWarningDialog(
-                                        themeColor: widget.themeColor ?? AppColors.primaryColor,
-                                        useMobileLayout: useMobileLayout,
-                                        context: context,
-                                        title: "Issue".translate(),
-                                        subTitle: data?["message"],
-                                        buttonOnTap: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                        buttonText: "Okay".translate());
-                                  } else {
+                                length: 6,
+                                defaultPinTheme: PinTheme(
+                                    textStyle: const TextStyle(fontSize: 20),
+                                    height: 40,
+                                    width: size,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey.shade400),
+                                        borderRadius: BorderRadius.circular(8)
+                                    )
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
+                                ],
+                                textInputAction: TextInputAction.go,
+                                onCompleted: (pin) async {
+                                  if (pin.length == 6) {
+                                    AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
+                                    // bool? success = await AppServices.sadadPayVerifyOtp(
+                                    //     token: widget.token, otp: code, userId: sendOtpModel!.userId!.toString());
+                                    //Navigator.pop(context);
+                                    //if (success!) {
+                                    String? ipAddress = await NetworkInfo().getWifiIPv6();
+                                    Map? data = await AppServices.sadadPayTransactionV6(
+                                        ipAddress: ipAddress ?? "",
+                                        sadadId: sendOtpModel!.id!,
+                                        userId: sendOtpModel!.userId!,
+                                        token: widget.token,
+                                        orderId: widget.orderId,
+                                        amount: widget.amount,issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0",
+                                        productDetails: widget.productDetail, otp: pin);
                                     Navigator.pop(context);
-                                    Navigator.pop(context, data);
+                                    if (data?["statusCode"] != null) {
+                                      AppDialog.commonWarningDialog(
+                                          themeColor: widget.themeColor ?? AppColors.primaryColor,
+                                          useMobileLayout: useMobileLayout,
+                                          context: context,
+                                          title: "Issue".translate(),
+                                          subTitle: data?["message"],
+                                          buttonOnTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          },
+                                          buttonText: "Okay".translate());
+                                    } else {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context, data);
+                                    }
+                                    // } else {
+                                    //   // setStatee(() {
+                                    //   //   errorText = "You have entered Invalid OTP.".translate();
+                                    //   // });
+                                    //   Navigator.pop(context);
+                                    //   sadadPayOTPController.clear();
+                                    //   AppDialog.commonWarningDialog(
+                                    //       themeColor: widget.themeColor ?? AppColors.primaryColor,
+                                    //       useMobileLayout: useMobileLayout,
+                                    //       context: context,
+                                    //       title: "Issue".translate(),
+                                    //       subTitle: "You have entered Invalid OTP.".translate(),
+                                    //       buttonOnTap: () {
+                                    //         Navigator.pop(context);
+                                    //       },
+                                    //       buttonText: "Okay".translate());
+                                    // }
                                   }
-                                  // } else {
-                                  //   // setStatee(() {
-                                  //   //   errorText = "You have entered Invalid OTP.".translate();
-                                  //   // });
-                                  //   Navigator.pop(context);
-                                  //   sadadPayOTPController.clear();
-                                  //   AppDialog.commonWarningDialog(
-                                  //       themeColor: widget.themeColor ?? AppColors.primaryColor,
-                                  //       useMobileLayout: useMobileLayout,
-                                  //       context: context,
-                                  //       title: "Issue".translate(),
-                                  //       subTitle: "You have entered Invalid OTP.".translate(),
-                                  //       buttonOnTap: () {
-                                  //         Navigator.pop(context);
-                                  //       },
-                                  //       buttonText: "Okay".translate());
-                                  // }
-                                }
-                              },
-                            );
-                          }
+                                },
+                              );
+                            }
                         ),
                         SizedBox(height: useMobileLayout ? 20 : 40),
                         StatefulBuilder(
@@ -2202,54 +2222,54 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             }
                             return RichText(
                                 text: TextSpan(children: [
-                              TextSpan(
-                                  text: counter > 0
-                                      ? "OTP is valid Upto ".translate()
-                                      : "Didn't receive the OTP? ".translate(),
-                                  style: TextStyle(color: AppColors.black, fontSize: useMobileLayout ? 13 : 18)),
-                              TextSpan(
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () async {
-                                      //print(counter);
-                                      if (counter < 1) {
-                                        if (counter == 0) {
-                                          AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
-                                          bool success = await AppServices.sadadPayResendOtpV6(
-                                              token: sendOtpModel!.id!,
-                                              issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0");
-                                          Navigator.pop(context);
-                                          if (success) {
-                                            counter = 59;
-                                            // initOTPCounter();
-                                            sadadPayOTPController.clear();
-                                          } else {
-                                            AppDialog.commonWarningDialog(
-                                                themeColor: widget.themeColor ?? AppColors.primaryColor,
-                                                useMobileLayout: useMobileLayout,
-                                                context: context,
-                                                title: "Issue".translate(),
-                                                subTitle: "We are not able to process your payment.".translate(),
-                                                buttonOnTap: () {
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                },
-                                                buttonText: "Okay".translate());
+                                  TextSpan(
+                                      text: counter > 0
+                                          ? "OTP is valid Upto ".translate()
+                                          : "Didn't receive the OTP? ".translate(),
+                                      style: TextStyle(color: AppColors.black, fontSize: useMobileLayout ? 13 : 18)),
+                                  TextSpan(
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          //print(counter);
+                                          if (counter < 1) {
+                                            if (counter == 0) {
+                                              AppDialog.showProcess(context, widget.themeColor ?? primaryColor);
+                                              bool success = await AppServices.sadadPayResendOtpV6(
+                                                  token: sendOtpModel!.id!,
+                                                  issandboxmode: (widget.packageMode == PackageMode.debug) ? "1" : "0");
+                                              Navigator.pop(context);
+                                              if (success) {
+                                                counter = 59;
+                                                // initOTPCounter();
+                                                sadadPayOTPController.clear();
+                                              } else {
+                                                AppDialog.commonWarningDialog(
+                                                    themeColor: widget.themeColor ?? AppColors.primaryColor,
+                                                    useMobileLayout: useMobileLayout,
+                                                    context: context,
+                                                    title: "Issue".translate(),
+                                                    subTitle: "We are not able to process your payment.".translate(),
+                                                    buttonOnTap: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    buttonText: "Okay".translate());
+                                              }
+                                            }
                                           }
-                                        }
-                                      }
-                                      setState(() {});
-                                    },
-                                  text: counter > 0 ? counter.toString() : "Resend".translate(),
-                                  style: TextStyle(
-                                      color: widget.themeColor,
-                                      fontSize: useMobileLayout ? 13 : 18,
-                                      fontWeight: FontWeight.w600)),
-                              if (counter > 0)
-                                TextSpan(
-                                    text: " ${"seconds".translate()}",
-                                    style: TextStyle(color: AppColors.black, fontSize: useMobileLayout ? 13 : 18)),
-                            ]));
+                                          setState(() {});
+                                        },
+                                      text: counter > 0 ? counter.toString() : "Resend".translate(),
+                                      style: TextStyle(
+                                          color: widget.themeColor,
+                                          fontSize: useMobileLayout ? 13 : 18,
+                                          fontWeight: FontWeight.w600)),
+                                  if (counter > 0)
+                                    TextSpan(
+                                        text: " ${"seconds".translate()}",
+                                        style: TextStyle(color: AppColors.black, fontSize: useMobileLayout ? 13 : 18)),
+                                ]));
                           },
                         ),
                         const SizedBox(height: 20),
@@ -2330,3 +2350,4 @@ String getCardType(String cardNumber) {
 
   //639950 start number of himyan
 }
+

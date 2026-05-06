@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                         productDetail: [
                           {"test": "jhjkkk", "test2": "dfdsf"}
                         ],
-                        customerName: "Sadad Internal",
+                        customerName: "Sadad Internal",merchantSadadId: receivedData!["sadadId"],
                         amount: total(),
                         email: receivedData!["email"],
                         mobile: receivedData!["mobile"],

@@ -273,25 +273,25 @@ class AppServices {
     return null;
   }
 
-  // static Future<Map<String, dynamic>?> googlePayGetConstant({required String sadadId, required String token, required String issandboxmode}) async {
-  //     final url = Uri.parse(
-  //       ApiEndPoint.googlePayGetConstant,
-  //     );
-  //     Map<String, String> header = {'Content-Type': 'application/json'};
-  //     Map<String, dynamic> body = {"sadadId": int.parse(sadadId),"token" : token,"issandboxmode" : issandboxmode};
-  //
-  //     var result = await http.post(
-  //       url,
-  //       headers: header,
-  //       body: json.encode(body),
-  //     );
-  //
-  //     if (result.statusCode == 200) {
-  //       var response = jsonDecode(result.body);
-  //       return response;
-  //     }
-  //     return null;
-  // }
+  static Future<Map<String, dynamic>?> googlePayGetConstant({required String sadadId, required String token, required String issandboxmode}) async {
+      final url = Uri.parse(
+        ApiEndPoint.googlePayGetConstant,
+      );
+      Map<String, String> header = {'Content-Type': 'application/json'};
+      Map<String, dynamic> body = {"sadadId": int.parse(sadadId),"token" : token,"issandboxmode" : issandboxmode};
+
+      var result = await http.post(
+        url,
+        headers: header,
+        body: json.encode(body),
+      );
+
+      if (result.statusCode == 200) {
+        var response = jsonDecode(result.body);
+        return response;
+      }
+      return null;
+  }
 
   static Future<Map?> sadadPayTransactionV6(
       {required String ipAddress,
