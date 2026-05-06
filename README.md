@@ -31,7 +31,7 @@ To know more about Sadad payment flow and steps involved, read up here: [https:/
 
 ![googleSS3.png](/assets/googleSS3.png)
 
-- While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in googleMerchantID. Example mentioned below.
+- While initiating Sadad Flutter SDK in the live mode with walletenabled parameter set to true, pass your Google Pay merchant ID in googleMerchantID . Example mentioned below.
 
 ## Installation
 
@@ -40,7 +40,7 @@ This plugin is available on Pub: [https://pub.dev/packages/sadad_qa_payments](ht
 Add this to `dependencies` in your app's `pubspec.yaml`
 
 ```yaml
-sadad_qa_payments: ^0.0.37
+sadad_qa_payments: ^1.0.2
 ```
 
 **Note for Android**: Make sure that the minimum API level for your app is 21 or higher.
@@ -53,22 +53,22 @@ Run `flutter packages get` in the root directory of your app.
 Sandbox: curl --location 'https://api.sadadqatar.com/api-v5/userbusinesses/getsdktoken' \
 --header 'Content-Type: application/json' \
 --data '{
-                        "sadadId": "SADAD_ID",
-                        "secretKey": "TEST_KEY",
-                        "domain": "TEST_KEY_DOMAIN",
-                        "isTest": true
-                    }'
+"sadadId": "SADAD_ID",
+"secretKey": "TEST_KEY",
+"domain": "TEST_KEY_DOMAIN",
+"isTest": true
+}'
 
 Production: curl --location 'https://api.sadadqatar.com/api-v4/userbusinesses/getsdktoken' \
 --header 'Content-Type: application/json' \
 --data '{
-                        "sadadId": "SADAD_ID",
-                        "secretKey": "LIVE_KEY",
-                        "domain": "LIVE_KEY_DOMAIN"
-                    }'
+"sadadId": "SADAD_ID",
+"secretKey": "LIVE_KEY",
+"domain": "LIVE_KEY_DOMAIN"
+}'
 
 Sample Response: {
-    "accessToken": "tWAJFMkO7y9epepUsf2s8mc6DtnXO24vnJoTcQQaNoRkoWg8xCqPXtcnH7WwQxNL"
+"accessToken": "tWAJFMkO7y9epepUsf2s8mc6DtnXO24vnJoTcQQaNoRkoWg8xCqPXtcnH7WwQxNL"
 }
 
 ## Usage
@@ -105,6 +105,7 @@ import 'package:sadad_qa_payments/sadad_qa_payments.dart';
                         paymentButtonColor: Colors.black,
                         paymentButtonTextColor: Colors.white,
                         themeColor: Colors.green,
+                        merchantSadadId: 'YOUR_SADAD_ID',
                         googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
                         googleMerchantName: 'Sadad Payment Solutions');
                     },
@@ -147,8 +148,10 @@ Here is the parameter type and description to pass.
 | paymentButtonColor  | Color                 | Pass Color for Pay button background color.                                                  |
 | paymentButtonTextColor    | Color                 | Pass Color for Pay button text color.                                                        |
 | themeColor  | Color                 | Pass color for set theme color of overall Payment gateway.                                   |
+| merchantSadadId  | String                 | Pass your Sadad ID provided by Sadad.                                                        |
 | googleMerchantID  | String                 | Pass "123456789" For Sandbox Mode and Production Mode read Prerequisites For Google Pay.     |
 | googleMerchantName  | String                 | Pass "Merchant_Name" For Sandbox Mode and Production Mode read Prerequisites For Google Pay. |
+
 ### Payment Completion response
 
 Here is the response parameter list and description.
@@ -184,12 +187,13 @@ Example 1 :
                           paymentButtonColor: Colors.black,
                           paymentButtonTextColor: Colors.white,
                           themeColor: Colors.green,
+                          merchantSadadId: 'YOUR_SADAD_ID',
                           googleMerchantID: 'BCR2D453R6Y72312',
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 1:
 
-![SDKScreenShot](https://github.com/user-attachments/assets/3457a7c1-c5f0-4922-a157-c0867a5c2fcd)
+![SDKScreenShot](https://github.com/user-attachments/assets/747fe68f-5fea-4d78-849a-e203712139d6)
 
 
 Example 2 :
@@ -210,11 +214,11 @@ Example 2 :
                           titleText: "Lorem Sample",
                           paymentButtonColor: Colors.red,
                           paymentButtonTextColor: Colors.white,
-                          themeColor: Colors.brown
+                          themeColor: Colors.brown,
+                          merchantSadadId: 'YOUR_SADAD_ID',
                           googleMerchantID: 'BCR2D453R6Y72312',
                           googleMerchantName: 'Sadad Payment Solutions');
 ```
 Output 2:
 
-![SDKScreenShot2](https://github.com/user-attachments/assets/9692cda9-2eb1-4d5d-a4f8-a512d5cbf9b6)
-
+![SDKScreenShot2](https://github.com/user-attachments/assets/aaf77bd6-2a47-4028-a031-d873f7ad2d69)
