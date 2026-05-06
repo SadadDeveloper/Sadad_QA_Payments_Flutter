@@ -379,7 +379,7 @@ packages:
       path: sadad_qa_payments
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
   shared_preferences:
     dependency: "direct main"
     description:
