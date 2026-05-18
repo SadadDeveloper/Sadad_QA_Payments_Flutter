@@ -482,11 +482,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 }
               },
               child: Container(
-                decoration: BoxDecoration(color: AppColors.black, borderRadius: BorderRadius.circular(10)),
-                height: useMobileLayout ? 50 : 65,
-                margin: EdgeInsets.symmetric(horizontal: useMobileLayout ? 40 : 62),
-                child:
-                Center(child: Image.asset(AssetPath.applePay, package: 'sadad_qa_payments', height: 22)),
+                height: 50,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                alignment: Alignment.center,
+                child: Image.asset(
+                  AssetPath.applePay,
+                  package: 'sadad_qa_payments',
+                  height: 20,
+                  fit: BoxFit.contain,
+                ),
               ),
             )
                 :
