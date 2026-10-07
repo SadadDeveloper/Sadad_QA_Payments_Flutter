@@ -1,4 +1,4 @@
-package com.sadadSDK.demo_sadad
+package com.sadadqa.business
 
 import io.flutter.embedding.android.FlutterActivity
 

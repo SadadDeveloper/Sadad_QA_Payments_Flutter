@@ -112,7 +112,11 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: isApiCalling
           ? const SizedBox()
-          : InkWell(
+          : SafeArea(
+    top: false,
+    child: Padding(
+    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+    child: InkWell(
               onTap: () async {
                 String? token = await GenerateToken();
                 if (token != null) {
@@ -135,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                         titleText: "Sadad Demo",
                         paymentButtonColor: Colors.black,
                         paymentButtonTextColor: Colors.white,
-                        themeColor: Colors.green,
+                        themeColor: Color(0xff8E1B3E),
                         googleMerchantID: 'BCR2DN6TR6Y7Z2CJ',
                         googleMerchantName: 'Sadad Payment Solutions');
                     },
@@ -147,17 +151,22 @@ class _HomePageState extends State<HomePage> {
                   });
                 }
               },
-              child: Container(
-                height: 50,
-                child: Center(
-                    child: Text(
-                  "Pay : ${total()}",
-                  style: TextStyle(color: Colors.white),
-                )),
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Text(
+            "Pay : ${total()}",
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    ),
+    ),
+      ),
       body: SafeArea(
         child: Center(
             child: isApiCalling
@@ -324,6 +333,8 @@ class _HomePageState extends State<HomePage> {
     final  url = Uri.parse(
       _isServerSwitchOn ? 'https://aks-api.sadadqatar.com/api-v5/userbusinesses/getsdktoken' : 'https://api.sadadqatar.com/api-v5/userbusinesses/getsdktoken',//Prod
     );
+   // _isServerSwitchOn ? 'https://aks-fastpyv7.sadad.qa/api-v7/userbusinesses/getsdktoken' : 'https://apiv7-v2.sadadqatar.com/api-v7/userbusinesses/getsdktoken',//Prod
+
     final body = json.encode({
       "sadadId": receivedData!["sadadId"],
 
